@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- 3D block highlight filter -->
+    <linearGradient id="cyanBlock" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8ee9ff"/>
+      <stop offset="100%" stop-color="#3aafdd"/>
+    </linearGradient>
+    <linearGradient id="purpleBlock" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#dda8ff"/>
+      <stop offset="100%" stop-color="#9b5fd4"/>
+    </linearGradient>
+    <linearGradient id="machineGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffb347"/>
+      <stop offset="100%" stop-color="#e8820a"/>
+    </linearGradient>
+    <linearGradient id="legGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4890e"/>
+      <stop offset="100%" stop-color="#a05f00"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ── Background ── -->
+  <rect width="512" height="512" rx="96" fill="#FFD700"/>
+  <!-- subtle inner shadow ring -->
+  <rect width="512" height="512" rx="96" fill="none" stroke="rgba(0,0,0,.08)" stroke-width="12"/>
+
+  <!-- ── Tetromino L-piece (cyan) — upper-left, falling toward machine ── -->
+  <!-- col 0 -->
+  <rect x="60" y="72"  width="54" height="54" rx="9" fill="url(#cyanBlock)" stroke="#1e6b8a" stroke-width="3"/>
+  <rect x="62" y="74"  width="18" height="6"  rx="3" fill="rgba(255,255,255,.55)"/>
+  <rect x="60" y="130" width="54" height="54" rx="9" fill="url(#cyanBlock)" stroke="#1e6b8a" stroke-width="3"/>
+  <rect x="62" y="132" width="18" height="6"  rx="3" fill="rgba(255,255,255,.55)"/>
+  <rect x="60" y="188" width="54" height="54" rx="9" fill="url(#cyanBlock)" stroke="#1e6b8a" stroke-width="3"/>
+  <rect x="62" y="190" width="18" height="6"  rx="3" fill="rgba(255,255,255,.55)"/>
+  <!-- L foot -->
+  <rect x="118" y="188" width="54" height="54" rx="9" fill="url(#cyanBlock)" stroke="#1e6b8a" stroke-width="3"/>
+  <rect x="120" y="190" width="18" height="6"  rx="3" fill="rgba(255,255,255,.55)"/>
+
+  <!-- ── Tetromino T-piece (purple) — upper-right ── -->
+  <rect x="296" y="56"  width="54" height="54" rx="9" fill="url(#purpleBlock)" stroke="#6b2e9e" stroke-width="3"/>
+  <rect x="298" y="58"  width="18" height="6"  rx="3" fill="rgba(255,255,255,.55)"/>
+  <rect x="354" y="56"  width="54" height="54" rx="9" fill="url(#purpleBlock)" stroke="#6b2e9e" stroke-width="3"/>
+  <rect x="356" y="58"  width="18" height="6"  rx="3" fill="rgba(255,255,255,.55)"/>
+  <rect x="412" y="56"  width="54" height="54" rx="9" fill="url(#purpleBlock)" stroke="#6b2e9e" stroke-width="3"/>
+  <rect x="414" y="58"  width="18" height="6"  rx="3" fill="rgba(255,255,255,.55)"/>
+  <!-- T stem -->
+  <rect x="354" y="114" width="54" height="54" rx="9" fill="url(#purpleBlock)" stroke="#6b2e9e" stroke-width="3"/>
+  <rect x="356" y="116" width="18" height="6"  rx="3" fill="rgba(255,255,255,.55)"/>
+
+  <!-- ── Machine body ── -->
+  <rect x="120" y="198" width="284" height="214" rx="32" fill="url(#machineGrad)" stroke="#1a1a1a" stroke-width="8"/>
+  <!-- top shine -->
+  <rect x="136" y="204" width="252" height="12" rx="6" fill="rgba(255,255,255,.18)"/>
+
+  <!-- ── Screen ── -->
+  <rect x="150" y="226" width="192" height="118" rx="14" fill="#0b1a0b" stroke="#111" stroke-width="5"/>
+  <!-- screen inner glow -->
+  <rect x="154" y="230" width="184" height="8"  rx="4" fill="rgba(76,175,80,.15)"/>
+
+  <!-- ── ₿ symbol ── -->
+  <text x="246" y="313" text-anchor="middle" font-size="76" font-weight="900"
+        fill="#FFD700" font-family="Arial, Helvetica, sans-serif"
+        filter="url(#btcGlow)">₿</text>
+
+  <!-- ── Coin slot ── -->
+  <rect x="190" y="362" width="112" height="18" rx="9" fill="#111"/>
+  <rect x="192" y="364" width="108" height="6"  rx="3" fill="rgba(255,255,255,.1)"/>
+
+  <!-- ── Lever ── -->
+  <rect x="396" y="192" width="20" height="86" rx="10" fill="#e53935" stroke="#111" stroke-width="4"/>
+  <circle cx="406" cy="182" r="22" fill="#e53935" stroke="#111" stroke-width="5"/>
+  <circle cx="406" cy="182" r="9"  fill="rgba(255,255,255,.35)"/>
+
+  <!-- ── Legs ── -->
+  <rect x="146" y="402" width="48" height="72" rx="13" fill="url(#legGrad)" stroke="#1a1a1a" stroke-width="6"/>
+  <rect x="330" y="402" width="48" height="72" rx="13" fill="url(#legGrad)" stroke="#1a1a1a" stroke-width="6"/>
+
+  <!-- ── Three decorative rivets on machine left ── -->
+  <circle cx="140" cy="258" r="7" fill="rgba(0,0,0,.25)"/>
+  <circle cx="140" cy="285" r="7" fill="rgba(0,0,0,.25)"/>
+  <circle cx="140" cy="312" r="7" fill="rgba(0,0,0,.25)"/>
+</svg>
