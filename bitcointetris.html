@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Bitcoin Tetris Party — Stack blocks. Verify zero.</title>
+<meta name="description" content="Play a free Tetris-style Bitcoin probability game. Stack BIP-39 word blocks, collect seed phrases, and verify they always hold 0 BTC. Educational demo only." />
+<meta name="keywords" content="bitcoin, tetris, BIP-39, seed phrase, educational game, crypto game, bitcoin probability" />
+<meta property="og:title" content="Bitcoin Tetris Party — Stack blocks. Verify zero." />
+<meta property="og:description" content="Free Tetris game with a Bitcoin twist. Stack word blocks, verify seed phrases always return 0 BTC. Learn why random guessing is impossible." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://bitcointetris.vercel.app/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Bitcoin Tetris Party" />
+<meta name="twitter:description" content="Free Tetris game. Stack BIP-39 word blocks. Verify 0 BTC. Educational demo." />
+<meta name="theme-color" content="#1a4a1a" />
+<link rel="canonical" href="https://bitcointetris.vercel.app/" />
+<!-- =====================================================
+  Google AdSense — uncomment after publisher approval
+  Replace XXXXXXXXXXXXXXXX with your ca-pub ID
+  ===================================================== -->
+<!-- <script>window.__ADS_CLIENT = "ca-pub-XXXXXXXXXXXXXXXX";</script> -->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ===================================================
+   Bitcoin Tetris Party — Roblox Low-Poly Green World
+   =================================================== */
+:root {
+  --green-dark:  #0d1f0d;
+  --green-deep:  #1a4a1a;
+  --green-mid:   #2d6a2d;
+  --green-bright:#4CAF50;
+  --green-light: #7dc87d;
+  --sky:         #87CEEB;
+  --sky-dark:    #5ba8d4;
+  --gold:        #FFD700;
+  --gold2:       #ffb347;
+  --ink:         #1a1a1a;
+  --white:       #ffffff;
+  --btc:         #f7931a;
+  --btc2:        #ffd084;
+  --red:         #e53935;
+  --red-dark:    #b71c1c;
+  --yellow:      #ffd23f;
+
+  /* tetromino colours */
+  --ci: #5ac8ff;
+  --co: #ffd23f;
+  --ct: #c084fc;
+  --cs: #7be495;
+  --cz: #ff7a90;
+  --cj: #5b8def;
+  --cl: #ff9f43;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+
+/* ---- GREEN WORLD BODY ---- */
+body {
+  font-family: "Baloo 2", "Nunito", system-ui, sans-serif;
+  min-height: 100dvh;
+  background: linear-gradient(180deg,
+    var(--sky) 0%,
+    var(--sky) 55%,
+    #6dbf67 55%,
+    #4a9e4a 65%,
+    var(--green-deep) 65%,
+    var(--green-dark) 100%
+  );
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ---- LOW-POLY WORLD DECO ---- */
+.world-scene {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+/* Clouds */
+.cloud {
+  position: absolute; background: rgba(255,255,255,0.85); border-radius: 50px;
+  box-shadow: 0 0 0 10px rgba(255,255,255,0.5);
+  animation: cloudDrift linear infinite;
+}
+/* Hills */
+.hill {
+  position: absolute; bottom: 0; border-radius: 50% 50% 0 0;
+}
+/* Trees (triangle + trunk) */
+.tree {
+  position: absolute; display: flex; flex-direction: column; align-items: center;
+}
+.tree-top {
+  width: 0; height: 0;
+  border-left: solid transparent;
+  border-right: solid transparent;
+  border-bottom: solid;
+}
+.tree-trunk {
+  background: #5c3d11; border-radius: 2px;
+}
+
+@keyframes cloudDrift {
+  from { transform: translateX(-200px); }
+  to   { transform: translateX(calc(100vw + 200px)); }
+}
+
+/* ---- BUTTONS ---- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 22px; border-radius: 14px;
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 900; font-size: 16px; cursor: pointer;
+  border: 3px solid var(--ink);
+  background: var(--white); color: var(--ink);
+  box-shadow: 0 5px 0 var(--ink);
+  transition: transform .08s ease, box-shadow .08s ease;
+  user-select: none; text-decoration: none;
+}
+.btn:hover  { transform: translateY(-2px); box-shadow: 0 7px 0 var(--ink); }
+.btn:active { transform: translateY(4px);  box-shadow: 0 1px 0 var(--ink); }
+.btn:disabled { opacity: .5; cursor: not-allowed; pointer-events: none; }
+.btn-play {
+  background: linear-gradient(180deg, #6de06d, var(--green-bright));
+  color: var(--white); text-shadow: 0 1px 2px rgba(0,0,0,.4);
+  font-size: 22px; padding: 16px 36px;
+  box-shadow: 0 7px 0 var(--green-deep);
+  border-color: var(--green-deep);
+}
+.btn-play:hover  { box-shadow: 0 9px 0 var(--green-deep); }
+.btn-play:active { box-shadow: 0 2px 0 var(--green-deep); transform: translateY(5px); }
+.btn-settings {
+  background: linear-gradient(180deg, #9e9e9e, #757575);
+  color: var(--white); text-shadow: 0 1px 2px rgba(0,0,0,.3);
+  font-size: 18px; padding: 14px 28px;
+  box-shadow: 0 6px 0 #333; border-color: #333;
+}
+.btn-gold {
+  background: linear-gradient(180deg, var(--gold), var(--gold2));
+  color: var(--ink); box-shadow: 0 5px 0 #a07000; border-color: #a07000;
+}
+.btn-gold:active { box-shadow: 0 1px 0 #a07000; }
+.btn-sm {
+  font-size: 13px; padding: 8px 14px; border-width: 2px;
+  border-radius: 10px; box-shadow: 0 3px 0 var(--ink);
+}
+.btn-sm:active { box-shadow: 0 1px 0 var(--ink); }
+.btn-danger {
+  background: linear-gradient(180deg, #ff6b6b, var(--red));
+  color: white; text-shadow: 0 1px 0 rgba(0,0,0,.3);
+  border-color: var(--red-dark); box-shadow: 0 5px 0 var(--red-dark);
+}
+
+/* ---- PANELS ---- */
+.panel {
+  background: rgba(255,255,255,.95); border: 3px solid var(--ink); border-radius: 18px;
+  box-shadow: 0 6px 0 var(--ink), 0 10px 24px rgba(0,0,0,.15);
+  padding: 16px;
+}
+.panel-dark {
+  background: rgba(13,31,13,.9); border: 2px solid var(--green-bright);
+  border-radius: 14px; padding: 12px; color: var(--white);
+  box-shadow: 0 4px 0 var(--green-deep), inset 0 0 20px rgba(0,0,0,.3);
+}
+.panel-soft {
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+  border-radius: 12px; padding: 10px; color: var(--white);
+  backdrop-filter: blur(4px);
+}
+
+/* ---- SAFETY BADGE ---- */
+.safety-badge {
+  position: fixed; bottom: 12px; left: 12px; z-index: 500;
+  background: rgba(0,0,0,.75); color: #ffd700;
+  border: 2px solid rgba(255,215,0,.4); border-radius: 999px;
+  padding: 5px 12px; font-size: 11px; font-weight: 800;
+  backdrop-filter: blur(6px); pointer-events: none;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* ---- TOAST ---- */
+.toast-wrap {
+  position: fixed; top: 20px; right: 20px;
+  display: flex; flex-direction: column; gap: 8px; z-index: 9999;
+}
+.toast {
+  background: var(--ink); color: white; border-radius: 10px;
+  padding: 8px 16px; font-weight: 800; font-size: 13px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.3);
+  animation: slideIn .3s ease;
+}
+@keyframes slideIn { from { transform: translateX(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ===================================================
+   MAIN MENU
+   =================================================== */
+.main-menu {
+  position: relative; z-index: 1;
+  min-height: 100dvh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 24px; padding: 40px 20px;
+  text-align: center;
+}
+.menu-title {
+  font-size: clamp(32px, 7vw, 72px);
+  font-weight: 900; line-height: 1.05;
+  color: var(--white);
+  text-shadow:
+    3px 3px 0 var(--green-deep),
+    6px 6px 0 rgba(0,0,0,.3),
+    0 0 40px rgba(0,0,0,.4);
+  letter-spacing: -1px;
+}
+.menu-subtitle {
+  font-size: clamp(14px, 2.5vw, 20px);
+  color: rgba(255,255,255,.9);
+  font-weight: 700;
+  text-shadow: 1px 1px 4px rgba(0,0,0,.5);
+}
+.menu-buttons {
+  display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+}
+
+/* ---- SLOT MACHINE (CSS) ---- */
+.slot-machine-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  animation: idleBob 2.5s ease-in-out infinite;
+}
+@keyframes idleBob {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+.slot-machine {
+  width: 120px; position: relative;
+}
+.slot-body {
+  width: 120px; height: 140px; border-radius: 14px;
+  background: linear-gradient(180deg, #ffe566, #f0c000);
+  border: 4px solid var(--ink);
+  box-shadow: 0 8px 0 #a07000, inset 0 3px 8px rgba(255,255,255,.5);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 8px; position: relative; overflow: hidden;
+}
+.slot-btc {
+  font-size: 36px; font-weight: 900; color: var(--btc);
+  text-shadow: 0 2px 0 rgba(0,0,0,.3), 0 0 12px rgba(247,147,26,.6);
+}
+.slot-screen {
+  width: 80px; height: 36px; background: #111;
+  border-radius: 6px; border: 2px solid #333;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.slot-reel {
+  font-size: 12px; font-weight: 900; color: var(--gold);
+  font-family: ui-monospace, monospace; letter-spacing: 2px;
+  animation: reel 2s steps(1) infinite;
+}
+@keyframes reel {
+  0%   { content: ""; }
+  0%   { color: var(--gold); }
+  20%  { color: var(--ci); }
+  40%  { color: var(--cs); }
+  60%  { color: var(--ct); }
+  80%  { color: var(--cl); }
+}
+.slot-lights {
+  position: absolute; top: 6px; width: 100%;
+  display: flex; justify-content: space-around; padding: 0 8px;
+}
+.slot-light {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold); border: 1px solid rgba(0,0,0,.3);
+  animation: blink 1.2s ease-in-out infinite;
+}
+.slot-light:nth-child(2) { animation-delay: .3s; }
+.slot-light:nth-child(3) { animation-delay: .6s; }
+.slot-light:nth-child(4) { animation-delay: .9s; }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+.slot-lever-arm {
+  position: absolute; right: -22px; top: 20px;
+  width: 14px; height: 70px;
+  background: linear-gradient(180deg, #aaa, #666);
+  border-radius: 7px; border: 2px solid #333;
+  transform-origin: top center;
+  transition: transform .3s ease;
+}
+.slot-lever-ball {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: linear-gradient(180deg, #ff6b6b, var(--red));
+  border: 2px solid var(--red-dark);
+  margin: -2px auto 0; margin-left: -4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.4);
+}
+.slot-machine-wrap.pulling .slot-lever-arm { transform: rotate(40deg); }
+.slot-base {
+  width: 130px; height: 16px; background: linear-gradient(180deg, #c9a000, #a07000);
+  border-radius: 0 0 10px 10px; border: 3px solid var(--ink); border-top: none;
+  box-shadow: 0 5px 0 #7a5000;
+}
+
+/* ===================================================
+   SLOT MACHINE INTRO
+   =================================================== */
+.intro-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.85);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+}
+.intro-machine {
+  transform-origin: center;
+  animation: introZoom .4s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes introZoom {
+  from { transform: scale(0.2); opacity: 0; }
+  to   { transform: scale(1.5); opacity: 1; }
+}
+.intro-coins-container {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+}
+.intro-coin {
+  position: absolute; width: 20px; height: 20px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--btc));
+  border: 2px solid var(--ink); font-size: 9px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center; color: white;
+  animation: coinBurst .7s ease-out forwards;
+}
+@keyframes coinBurst {
+  0%   { transform: translate(0,0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+}
+.intro-flash {
+  position: absolute; inset: 0;
+  animation: flashFade 1.2s ease forwards;
+  pointer-events: none;
+}
+@keyframes flashFade {
+  0%   { background: white; opacity: .8; }
+  30%  { background: white; opacity: .6; }
+  100% { background: transparent; opacity: 0; }
+}
+
+/* ===================================================
+   SETTINGS SCREEN
+   =================================================== */
+.settings-screen {
+  position: relative; z-index: 1;
+  min-height: 100dvh; padding: 24px 16px;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+.settings-title {
+  font-size: 32px; font-weight: 900; color: var(--white);
+  text-shadow: 3px 3px 0 var(--green-deep);
+}
+.settings-inner {
+  width: 100%; max-width: 900px;
+  display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start;
+}
+.settings-back {
+  align-self: flex-start;
+}
+
+/* category cubes */
+.cube-grid { display: grid; grid-template-columns: repeat(13, 1fr); gap: 6px; }
+.cube {
+  aspect-ratio: 1; border: 2px solid var(--ink); border-radius: 8px;
+  background: linear-gradient(180deg, #fff, #e8e0d0);
+  display: grid; place-items: center; font-weight: 900; cursor: pointer;
+  font-size: 14px; box-shadow: 0 3px 0 var(--ink);
+  transition: transform .1s; user-select: none;
+}
+.cube:hover { transform: translateY(-2px) rotate(-3deg); }
+.cube.selected {
+  background: linear-gradient(180deg, var(--gold), var(--gold2));
+  color: var(--ink); transform: translateY(-1px);
+  box-shadow: 0 3px 0 #a07000; border-color: #a07000;
+}
+.cube.disabled { opacity: .3; cursor: not-allowed; }
+
+/* word chip */
+.word-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
+  border-radius: 6px; padding: 2px 6px; font-size: 11px; font-weight: 800;
+  font-family: ui-monospace, monospace; color: var(--white);
+}
+.word-chip .num { color: var(--gold); }
+
+/* progress bar */
+.progress-bar {
+  height: 8px; border-radius: 4px; background: rgba(255,255,255,.15); overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--gold), var(--btc));
+  border-radius: 4px; transition: width .3s ease;
+}
+
+/* ===================================================
+   GAME SHELL — 100dvh full-screen
+   =================================================== */
+.game-shell {
+  height: 100dvh; overflow: hidden;
+  display: flex; flex-direction: column;
+  background: var(--green-dark);
+  position: relative; z-index: 1;
+}
+
+/* HUD */
+.game-hud {
+  flex: 0 0 auto;
+  background: rgba(0,0,0,.5);
+  border-bottom: 2px solid var(--green-bright);
+  padding: 6px 12px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  backdrop-filter: blur(4px);
+}
+.hud-name {
+  font-weight: 900; font-size: 14px; color: var(--gold);
+  text-shadow: 1px 1px 0 rgba(0,0,0,.5);
+}
+.hud-stat {
+  font-size: 13px; color: rgba(255,255,255,.8);
+}
+.hud-stat strong { color: var(--white); }
+.hud-spacer { flex: 1; }
+
+/* game body (below HUD) */
+.game-body {
+  flex: 1 1 0; overflow: hidden;
+  display: flex; align-items: stretch;
+}
+.game-left, .game-right {
+  width: 190px; flex: 0 0 190px;
+  background: rgba(0,0,0,.3); padding: 10px;
+  display: flex; flex-direction: column; gap: 10px; overflow-y: auto;
+  border-right: 1px solid rgba(255,255,255,.08);
+}
+.game-right { border-right: none; border-left: 1px solid rgba(255,255,255,.08); }
+.game-center {
+  flex: 1 1 0; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 6px; padding: 8px 4px; overflow: hidden; position: relative;
+}
+
+/* ===================================================
+   TETRIS BOARD — 3D BLOCKS
+   =================================================== */
+.board-wrap {
+  position: relative;
+  /* responsive sizing */
+  height: 100%;
+  display: flex; align-items: center; justify-content: center;
+}
+.board {
+  display: grid; gap: 2px; padding: 6px;
+  background: #080f08;
+  border: 3px solid var(--green-bright);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 4px 16px rgba(0,0,0,.7),
+    0 0 0 1px rgba(0,0,0,.5),
+    0 6px 24px rgba(0,0,0,.5);
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(20, 1fr);
+  /* always 10:20 ratio */
+  aspect-ratio: 10 / 20;
+  height: min(calc(100dvh - 72px), calc(100vw * 0.42));
+  max-height: calc(100dvh - 72px);
+}
+.cell {
+  background: rgba(255,255,255,.03); border-radius: 3px;
+  aspect-ratio: 1;
+  display: grid; place-items: center;
+  font-weight: 900; font-size: clamp(8px, 1.2vw, 13px);
+  color: rgba(255,255,255,.95);
+  text-shadow: 0 1px 2px rgba(0,0,0,.8);
+  position: relative;
+}
+.cell.filled {
+  background: var(--c, #888);
+  border: 1px solid rgba(0,0,0,.2);
+  box-shadow:
+    inset -3px -3px 0 rgba(0,0,0,.35),
+    inset 3px 3px 0 rgba(255,255,255,.45),
+    0 2px 4px rgba(0,0,0,.3);
+  border-radius: 3px;
+}
+.cell.ghost {
+  background: rgba(255,255,255,.05);
+  border: 1px dashed rgba(255,255,255,.12);
+}
+.cell.flash { animation: cellFlash .4s ease; }
+@keyframes cellFlash { 0% { filter: brightness(3); } 100% { filter: brightness(1); } }
+
+/* mini board (next piece) */
+.mini-board {
+  display: grid; gap: 2px; padding: 4px; background: #080f08;
+  border: 2px solid var(--green-bright); border-radius: 8px;
+  grid-template-columns: repeat(4, 1fr);
+  width: 80px; height: 64px;
+}
+.mini-cell { background: rgba(255,255,255,.04); border-radius: 2px; }
+.mini-cell.filled {
+  background: var(--c);
+  box-shadow: inset -2px -2px 0 rgba(0,0,0,.3), inset 2px 2px 0 rgba(255,255,255,.4);
+}
+
+/* ===================================================
+   PARTICLE LAYER
+   =================================================== */
+.particle-layer {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 10;
+}
+.particle {
+  position: absolute; width: 7px; height: 7px; border-radius: 2px;
+  animation: particleExplode var(--dur, .6s) ease-out forwards;
+}
+@keyframes particleExplode {
+  0%   { transform: translate(0,0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--pdx), var(--pdy)) rotate(720deg); opacity: 0; }
+}
+.score-popup {
+  position: absolute; pointer-events: none;
+  font-weight: 900; font-size: 18px; color: var(--gold);
+  text-shadow: 0 1px 4px rgba(0,0,0,.8);
+  animation: scoreFloat .8s ease-out forwards;
+  white-space: nowrap;
+}
+@keyframes scoreFloat {
+  0%   { transform: translateY(0) scale(1); opacity: 1; }
+  50%  { transform: translateY(-30px) scale(1.2); opacity: 1; }
+  100% { transform: translateY(-70px) scale(.8); opacity: 0; }
+}
+
+/* ===================================================
+   MOBILE CONTROLS
+   =================================================== */
+.mobile-controls {
+  flex: 0 0 auto;
+  background: rgba(0,0,0,.5); border-top: 1px solid rgba(255,255,255,.08);
+  padding: 8px 12px; display: none;
+  gap: 8px; justify-content: center; align-items: center;
+}
+.mobile-controls.visible { display: flex; }
+.mc-group { display: flex; gap: 6px; }
+.mc-btn {
+  width: 52px; height: 52px;
+  background: linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,.05));
+  border: 2px solid rgba(255,255,255,.3);
+  border-radius: 12px; font-size: 18px; cursor: pointer;
+  box-shadow: 0 3px 0 rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.2);
+  color: white; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  touch-action: manipulation; user-select: none;
+  transition: transform .05s, box-shadow .05s;
+}
+.mc-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,.4); }
+.mc-btn.wide { width: 90px; font-size: 14px; }
+.mc-separator { width: 1px; height: 40px; background: rgba(255,255,255,.15); margin: 0 4px; }
+
+/* ===================================================
+   PAUSE OVERLAY
+   =================================================== */
+.pause-overlay {
+  position: absolute; inset: 0; z-index: 20;
+  background: rgba(0,0,0,.7); backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+}
+.pause-text {
+  font-size: 48px; font-weight: 900; color: white;
+  text-shadow: 0 4px 0 rgba(0,0,0,.5);
+  animation: pausePulse 1.5s ease-in-out infinite;
+}
+@keyframes pausePulse { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+
+/* ===================================================
+   GAME OVER SCREEN
+   =================================================== */
+.gameover-screen {
+  position: relative; z-index: 1;
+  min-height: 100dvh; background: var(--green-dark);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 24px; padding: 40px 16px; text-align: center;
+}
+.gameover-title {
+  font-size: clamp(40px, 8vw, 80px); font-weight: 900; color: var(--btc);
+  text-shadow: 4px 4px 0 rgba(0,0,0,.5), 0 0 30px rgba(247,147,26,.4);
+}
+.stat-grid {
+  display: flex; gap: 24px; flex-wrap: wrap; justify-content: center;
+}
+.stat-block {
+  background: rgba(255,255,255,.07); border: 2px solid rgba(255,255,255,.15);
+  border-radius: 14px; padding: 16px 24px; min-width: 120px;
+}
+.stat-label { font-size: 12px; color: rgba(255,255,255,.6); font-weight: 700; }
+.stat-value { font-size: 40px; font-weight: 900; color: var(--white); line-height: 1.1; }
+
+/* ===================================================
+   VERIFY MODE
+   =================================================== */
+.verify-screen {
+  position: relative; z-index: 1;
+  min-height: 100dvh; background: var(--green-dark);
+  padding: 24px 16px;
+}
+.ticket {
+  background: linear-gradient(135deg, #1a2e1a, #0f1f0f);
+  border: 2px dashed var(--green-bright); border-radius: 14px; padding: 14px;
+  position: relative; color: var(--white);
+  box-shadow: 0 4px 12px rgba(0,0,0,.4);
+}
+.ticket.verified {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, #1f2a0a, #0a1f0a);
+}
+.ticket .barcode {
+  height: 24px; margin: 8px 0;
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.8) 0 2px, transparent 2px 5px, rgba(255,255,255,.5) 5px 6px, transparent 6px 9px);
+  border-radius: 3px;
+}
+.ticket .reveal {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--ink); border-radius: 8px;
+  padding: 12px; text-align: center; font-weight: 900; cursor: pointer;
+  border: 2px solid #a07000; box-shadow: 0 3px 0 #7a5000;
+}
+.ticket .reveal:active { transform: translateY(2px); box-shadow: 0 1px 0 #7a5000; }
+.verified-panel {
+  background: rgba(76,175,80,.15); border: 1px solid var(--green-bright);
+  border-radius: 8px; padding: 10px; margin-top: 6px;
+}
+.stamp {
+  display: inline-block; transform: rotate(-12deg);
+  border: 3px solid var(--green-bright); color: var(--green-bright);
+  padding: 4px 10px; border-radius: 6px; font-weight: 900; letter-spacing: 1px;
+  font-size: 14px;
+}
+
+/* ===================================================
+   SHARE MODAL
+   =================================================== */
+.share-modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 900;
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+}
+.share-card {
+  background: linear-gradient(135deg, var(--green-deep), var(--green-dark));
+  border: 3px solid var(--gold); border-radius: 18px;
+  padding: 20px; max-width: 440px; width: 100%;
+  box-shadow: 0 8px 0 rgba(0,0,0,.4), 0 20px 40px rgba(0,0,0,.5);
+  color: white;
+}
+
+/* ===================================================
+   MISC HELPERS
+   =================================================== */
+.row { display: flex; gap: 12px; }
+.col { display: flex; flex-direction: column; gap: 10px; }
+.muted { color: rgba(255,255,255,.6); }
+.small { font-size: 12px; }
+.kbd {
+  font-family: ui-monospace, monospace;
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
+  border-radius: 4px; padding: 1px 5px; font-size: 11px;
+  box-shadow: 0 1.5px 0 rgba(0,0,0,.4);
+  display: inline-block;
+}
+.trust-pill {
+  background: rgba(76,175,80,.2); border: 1px solid var(--green-bright);
+  color: var(--green-light); border-radius: 999px;
+  padding: 2px 8px; font-size: 11px; font-weight: 800;
+}
+
+/* ===================================================
+   RESPONSIVE
+   =================================================== */
+@media (max-width: 768px) {
+  .game-left, .game-right { display: none; }
+  .mobile-controls.visible { display: flex; }
+  .board {
+    height: min(calc(100dvh - 52px - 84px), calc(100vw * 1.8));
+    width: auto;
+    max-height: none;
+  }
+  .cube-grid { grid-template-columns: repeat(7, 1fr); }
+  .settings-inner { flex-direction: column; }
+}
+@media (min-width: 769px) {
+  .mobile-controls { display: none !important; }
+  .board {
+    width: calc((100dvh - 72px) / 2);
+    height: calc(100dvh - 72px);
+    max-height: calc(100dvh - 72px);
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Green world background deco (rendered by JS below) -->
+<div class="world-scene" id="world-scene"></div>
+
+<main id="root"></main>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<script>
+// ============================================================
+// BIP-39 4-letter words — official list filtered to length 4
+// SAFETY: These are never used as real seeds.
+// ============================================================
+window.BIP39_4LETTER = [
+  "able","acid","also","arch","area","army","aunt","auto","away","back","bail","bake","ball","band","bang","bank","barn","base","bath","beam","bean","bear","beef","beer","bell","belt","best","bike","bill","bind","bird","bite","blue","blur","boat","body","boil","bomb","bone","book","boom","boot","boss","both","brag","bran","burn","busy","buzz","cage","cake","calm","camp","cane","card","care","cart","case","cash","cast","cave","chef","chin","chip","clap","claw","clay","clip","club","coat","code","coil","coin","cook","cool","copy","core","corn","cost","cram","crew","crop","cry","cube","curl","cute","dad","damp","dash","data","dawn","deal","dear","deer","deny","desk","diet","disk","doll","door","dove","drag","draw","drum","duck","dumb","dust","earn","echo","edge","else","envy","epic","even","exam","face","fact","fade","fair","fall","fame","farm","fast","fate","fear","feed","feel","film","find","fine","fire","firm","fish","flag","flat","flee","flex","flip","flow","foam","fold","food","foot","fork","frog","fuel","fury","game","gear","gene","gift","girl","give","glad","glow","glue","goal","gold","good","gown","grab","grid","grin","grip","grow","gulf","hair","half","hall","hand","hang","hard","harm","hate","hawk","head","help","hero","hide","high","hill","hint","hold","hole","home","hood","hook","hope","horn","host","huge","hurt","idea","idle","into","iron","item","jazz","join","joke","jump","just","keen","keep","kick","kind","king","kiss","knee","know","lady","lake","lamp","land","lash","lawn","lazy","leaf","lend","less","lift","like","lime","link","lion","list","live","load","loan","lock","long","loop","lose","loss","loud","love","luck","lung","lyric","make","mall","mask","math","meat","melt","menu","mesh","mind","mint","miss","moan","mode","moon","more","most","moth","move","mule","myth","nail","name","near","neck","need","nest","next","nice","nine","node","noon","norm","nose","note","numb","oath","obey","odd","once","only","open","over","pace","page","pair","palm","pane","park","pass","path","pave","peak","pear","peel","peer","pine","pink","pipe","plan","play","plug","poem","poet","pole","pond","pool","pose","post","pour","prey","pull","pump","pure","push","quiz","race","rail","rain","ramp","rare","rate","read","real","reef","rely","rent","rest","rice","rich","ride","ring","riot","rise","risk","road","roam","rock","role","roof","root","rope","rose","ruin","rule","rush","rust","sad","sail","sale","salt","same","sand","save","scan","seal","seed","seek","self","sell","send","shed","ship","shoe","shop","show","silk","sing","sink","size","skate","skin","skull","slab","slim","slot","slow","snag","snap","snow","soap","sock","soda","soft","sold","song","soon","soul","soup","span","spin","spoon","spot","stab","stag","star","stay","stem","step","stir","stop","such","suit","surf","sway","swim","tail","tale","tall","tank","tape","task","tell","tent","term","test","text","that","them","then","they","thin","this","tide","time","tiny","toad","tone","tool","torn","town","trap","trim","trip","trot","true","tuna","tune","turn","twin","type","ugly","undo","unit","until","upon","used","veil","very","vest","view","vine","void","vote","wage","walk","wall","want","warm","warp","wash","wasp","wave","weak","weed","well","west","what","when","wide","wild","will","wind","wine","wing","wink","wire","wise","wish","wolf","wood","wool","word","worm","wrap","wren","year","yoga","zero","zinc","zone","zoom"
+];
+window.BIP39_4LETTER = window.BIP39_4LETTER.filter(w => w.length === 4);
+</script>
+
+<script>
+// ============================================================
+// TetrisEngine — preserved unchanged from original
+// SAFETY: No real seeds. No keys. No storage of mnemonic data.
+// ============================================================
+
+const SHAPES = {
+  I: [[1,1,1,1]],
+  O: [[1,1],[1,1]],
+  T: [[0,1,0],[1,1,1]],
+  S: [[0,1,1],[1,1,0]],
+  Z: [[1,1,0],[0,1,1]],
+  J: [[1,0,0],[1,1,1]],
+  L: [[0,0,1],[1,1,1]],
+};
+
+const COLORS = {
+  I: "#5ac8ff", O: "#ffd23f", T: "#c084fc",
+  S: "#7be495", Z: "#ff7a90", J: "#5b8def", L: "#ff9f43",
+};
+
+const COLS = 10;
+const ROWS = 20;
+
+function emptyBoard() {
+  return Array.from({length: ROWS}, () => Array(COLS).fill(null));
+}
+
+function rotateShape(shape) {
+  const rows = shape.length, cols = shape[0].length;
+  const out = Array.from({length: cols}, () => Array(rows).fill(0));
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) out[c][rows-1-r] = shape[r][c];
+  return out;
+}
+
+function getCells(piece) {
+  const cells = [];
+  let idx = 0;
+  for (let r = 0; r < piece.shape.length; r++) {
+    for (let c = 0; c < piece.shape[0].length; c++) {
+      if (piece.shape[r][c]) {
+        cells.push({ r: piece.r + r, c: piece.c + c, localR: r, localC: c, letterIdx: idx++ });
+      }
+    }
+  }
+  return cells;
+}
+
+function collides(board, piece) {
+  for (const cell of getCells(piece)) {
+    if (cell.c < 0 || cell.c >= COLS || cell.r >= ROWS) return true;
+    if (cell.r >= 0 && board[cell.r][cell.c]) return true;
+  }
+  return false;
+}
+
+function pickWord(pool) {
+  const arr = new Uint32Array(1);
+  crypto.getRandomValues(arr);
+  return pool[arr[0] % pool.length];
+}
+
+function spawnPiece(pool) {
+  const types = Object.keys(SHAPES);
+  const arr = new Uint32Array(1);
+  crypto.getRandomValues(arr);
+  const type = types[arr[0] % types.length];
+  const shape = SHAPES[type].map(r => [...r]);
+  const word = pickWord(pool);
+  return {
+    type, shape, color: COLORS[type], word,
+    letters: word.split(""),
+    pieceId: crypto.randomUUID(),
+    r: -1, c: Math.floor(COLS/2) - Math.ceil(shape[0].length/2),
+  };
+}
+
+function lockPiece(board, piece) {
+  const newBoard = board.map(r => [...r]);
+  for (const cell of getCells(piece)) {
+    if (cell.r < 0) continue;
+    newBoard[cell.r][cell.c] = {
+      color: piece.color,
+      letter: piece.letters[cell.letterIdx],
+      word: piece.word,
+      pieceId: piece.pieceId,
+    };
+  }
+  return newBoard;
+}
+
+function clearLines(board) {
+  const remaining = [];
+  const clearedWordsSet = new Set();
+  const clearedRows = [];
+  for (let r = 0; r < ROWS; r++) {
+    if (board[r].every(c => c !== null)) {
+      board[r].forEach(c => { if (c.word) clearedWordsSet.add(`${c.pieceId}::${c.word}`); });
+      clearedRows.push(r);
+    } else {
+      remaining.push(board[r]);
+    }
+  }
+  const cleared = ROWS - remaining.length;
+  while (remaining.length < ROWS) remaining.unshift(Array(COLS).fill(null));
+  const collectedWords = [...clearedWordsSet].map(s => s.split("::")[1]);
+  return { board: remaining, cleared, collectedWords, clearedRows };
+}
+
+function scoreFor(lines, level) {
+  return [0,100,300,500,800][lines] * (level || 1);
+}
+
+window.TetrisEngine = {
+  COLS, ROWS, COLORS, emptyBoard, rotateShape, getCells, collides,
+  spawnPiece, lockPiece, clearLines, scoreFor,
+};
+</script>
+
+<script>
+// Build green world background trees, hills, clouds
+(function buildWorld() {
+  const scene = document.getElementById("world-scene");
+  // Clouds
+  const cloudData = [
+    {top: "8%",  left: "-5%",   w: 140, h: 45, dur: "28s", delay: "0s"},
+    {top: "15%", left: "10%",   w: 100, h: 35, dur: "40s", delay: "-15s"},
+    {top: "5%",  left: "50%",   w: 160, h: 50, dur: "35s", delay: "-8s"},
+    {top: "20%", left: "80%",   w: 110, h: 38, dur: "45s", delay: "-22s"},
+  ];
+  cloudData.forEach(c => {
+    const el = document.createElement("div");
+    el.className = "cloud";
+    el.style.cssText = `top:${c.top};left:${c.left};width:${c.w}px;height:${c.h}px;animation-duration:${c.dur};animation-delay:${c.delay};`;
+    scene.appendChild(el);
+  });
+  // Hills
+  const hillData = [
+    {bottom: "38%", left: "-5%",   w: 380, h: 160, bg: "#3a7a3a"},
+    {bottom: "34%", left: "25%",   w: 320, h: 140, bg: "#4a8a4a"},
+    {bottom: "36%", left: "60%",   w: 400, h: 170, bg: "#3a7a3a"},
+    {bottom: "32%", left: "85%",   w: 280, h: 120, bg: "#559955"},
+  ];
+  hillData.forEach(h => {
+    const el = document.createElement("div");
+    el.className = "hill";
+    el.style.cssText = `bottom:${h.bottom};left:${h.left};width:${h.w}px;height:${h.h}px;background:${h.bg};`;
+    scene.appendChild(el);
+  });
+  // Trees
+  const treeData = [
+    {bottom: "33%", left: "5%",   sz: 55, col: "#2d6a2d"},
+    {bottom: "33%", left: "9%",   sz: 42, col: "#3a7a3a"},
+    {bottom: "34%", left: "18%",  sz: 60, col: "#265a26"},
+    {bottom: "33%", left: "73%",  sz: 50, col: "#2d6a2d"},
+    {bottom: "34%", left: "78%",  sz: 65, col: "#265a26"},
+    {bottom: "33%", left: "85%",  sz: 45, col: "#3a7a3a"},
+    {bottom: "33%", left: "92%",  sz: 55, col: "#2d6a2d"},
+  ];
+  treeData.forEach(t => {
+    const wrap = document.createElement("div");
+    wrap.className = "tree";
+    wrap.style.cssText = `bottom:${t.bottom};left:${t.left};position:absolute;`;
+    const top = document.createElement("div");
+    top.className = "tree-top";
+    const hs = t.sz * 0.7;
+    top.style.cssText = `border-left-width:${t.sz/2}px;border-right-width:${t.sz/2}px;border-bottom-width:${hs}px;border-bottom-color:${t.col};`;
+    const trunk = document.createElement("div");
+    trunk.className = "tree-trunk";
+    trunk.style.cssText = `width:${t.sz*0.2}px;height:${t.sz*0.3}px;`;
+    wrap.appendChild(top);
+    wrap.appendChild(trunk);
+    scene.appendChild(wrap);
+  });
+})();
+</script>
+
+<script type="text/babel">
+/* global React, ReactDOM, TetrisEngine */
+const { useState, useEffect, useRef, useCallback, useMemo } = React;
+const E = TetrisEngine;
+
+// ============================================================
+// SAFETY: This app NEVER asks for, sends, or stores real seed
+// phrases. All "tickets" are educational gameplay phrases.
+// localStorage holds only player name + non-sensitive stats.
+// ============================================================
+
+const STORAGE_KEY = "btctp_v2";
+const ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
+
+function loadStats() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+}
+function saveStats(p) {
+  const s = loadStats();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...s, ...p }));
+}
+
+async function fakeAddressFromWords(words) {
+  // PROTOTYPE-ONLY: NOT a real BIP-39 → address derivation.
+  // A real derivation requires PBKDF2 + BIP32.
+  // We deterministically hash the word list with SubtleCrypto for display only.
+  const buf = await crypto.subtle.digest(
+    "SHA-256", new TextEncoder().encode(words.join(" "))
+  );
+  const bytes = new Uint8Array(buf);
+  const hex = [...bytes].map(b => b.toString(16).padStart(2, "0")).join("");
+  return "bc1q" + hex.slice(0, 38);
+}
+
+// ============================================================
+// Toast
+// ============================================================
+function ToastHost({ toasts }) {
+  return (
+    <div className="toast-wrap">
+      {toasts.map(t => <div key={t.id} className="toast">{t.text}</div>)}
+    </div>
+  );
+}
+
+// ============================================================
+// AdSlot — renders only when window.__ADS_CLIENT is set
+// ============================================================
+function AdSlot({ slotId = "auto", format = "auto", style = {} }) {
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    try {
+      if (window.__ADS_CLIENT && ref.current) {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    } catch(e) {}
+  }, []);
+  if (!window.__ADS_CLIENT) return null;
+  return (
+    <div style={{ textAlign: "center", margin: "8px 0", ...style }}>
+      <ins ref={ref}
+        className="adsbygoogle"
+        style={{ display: "block" }}
+        data-ad-client={window.__ADS_CLIENT}
+        data-ad-slot={slotId}
+        data-ad-format={format}
+        data-full-width-responsive="true" />
+    </div>
+  );
+}
+
+// ============================================================
+// Privacy Policy Modal
+// ============================================================
+function PrivacyModal({ onClose }) {
+  return (
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,.8)", zIndex:9999, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }} onClick={onClose}>
+      <div style={{ background:"#0d1f0d", border:"2px solid #4CAF50", borderRadius:14, padding:24, maxWidth:520, width:"100%", maxHeight:"80vh", overflowY:"auto", color:"#fff" }} onClick={e => e.stopPropagation()}>
+        <h2 style={{ color:"#FFD700", marginBottom:12 }}>Privacy Policy</h2>
+        <p style={{ fontSize:13, lineHeight:1.7, color:"rgba(255,255,255,.8)" }}>
+          <strong>Bitcoin Tetris Party</strong> is a free educational game operated by Bithope.<br/><br/>
+          <strong>Data we collect:</strong> None. This game runs entirely in your browser. No account, no login, no personal data collected or stored on our servers.<br/><br/>
+          <strong>Local storage:</strong> Your player name and game count may be saved in your browser's localStorage for convenience. This data never leaves your device.<br/><br/>
+          <strong>Advertising:</strong> This site uses Google AdSense to display ads. Google may use cookies to serve ads based on your prior visits. You can opt out at <a href="https://adssettings.google.com" target="_blank" rel="noopener" style={{ color:"#4CAF50" }}>adssettings.google.com</a>.<br/><br/>
+          <strong>Safety:</strong> This game never asks for or stores real Bitcoin seed phrases. All words are generated locally using <code>crypto.getRandomValues</code>. No network calls are made during gameplay.<br/><br/>
+          <strong>Contact:</strong> bithope.app
+        </p>
+        <button className="btn btn-play" style={{ marginTop:16 }} onClick={onClose}>Close</button>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// Safety Badge
+// ============================================================
+function SafetyBadge() {
+  const [showPrivacy, setShowPrivacy] = React.useState(false);
+  return (
+    <>
+      <div className="safety-badge">
+        🔒 Demo only · Never enter a real seed ·{" "}
+        <span style={{ textDecoration:"underline", cursor:"pointer", opacity:.8 }} onClick={() => setShowPrivacy(true)}>Privacy</span>
+      </div>
+      {showPrivacy && <PrivacyModal onClose={() => setShowPrivacy(false)} />}
+    </>
+  );
+}
+
+// ============================================================
+// World scene (purely decorative — built by plain JS above)
+// ============================================================
+
+// ============================================================
+// SLOT MACHINE component (menu idle)
+// ============================================================
+function SlotMachine({ pulling = false }) {
+  const words = ["SAFE", "ZERO", "HASH", "HODL", "NODE", "SEED"];
+  const [wi, setWi] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setWi(i => (i + 1) % words.length), 900);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <div className={"slot-machine-wrap" + (pulling ? " pulling" : "")}>
+      <div className="slot-machine">
+        <div className="slot-body">
+          <div className="slot-lights">
+            <div className="slot-light" />
+            <div className="slot-light" />
+            <div className="slot-light" />
+            <div className="slot-light" />
+          </div>
+          <div className="slot-btc">₿</div>
+          <div className="slot-screen">
+            <div className="slot-reel">{words[wi]}</div>
+          </div>
+          <div className="slot-lever-arm">
+            <div className="slot-lever-ball" />
+          </div>
+        </div>
+        <div className="slot-base" />
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// SLOT MACHINE INTRO
+// ============================================================
+function SlotMachineIntro({ onComplete }) {
+  const [stage, setStage] = useState("zoom"); // zoom | lever | coins | flash | done
+  const [coins, setCoins] = useState([]);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    // Stage timeline
+    const t1 = setTimeout(() => {
+      setStage("lever");
+    }, 450);
+    const t2 = setTimeout(() => {
+      // Spawn coins
+      const c = Array.from({ length: 18 }, (_, i) => {
+        const angle = (i / 18) * Math.PI * 2;
+        const dist = 120 + Math.random() * 180;
+        return {
+          id: i,
+          dx: Math.cos(angle) * dist + "px",
+          dy: Math.sin(angle) * dist + "px",
+          left: "calc(50% - 10px)",
+          top: "calc(50% - 10px)",
+        };
+      });
+      setCoins(c);
+      setStage("coins");
+    }, 800);
+    const t3 = setTimeout(() => setStage("flash"), 1400);
+    const t4 = setTimeout(() => onComplete(), 2400);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+  }, [onComplete]);
+
+  return (
+    <div className="intro-overlay" ref={containerRef}>
+      <div className="intro-machine">
+        <SlotMachine pulling={stage === "lever" || stage === "coins"} />
+      </div>
+      {coins.length > 0 && (
+        <div className="intro-coins-container">
+          {coins.map(c => (
+            <div key={c.id} className="intro-coin"
+              style={{ left: c.left, top: c.top, "--dx": c.dx, "--dy": c.dy }}>
+              ₿
+            </div>
+          ))}
+        </div>
+      )}
+      {stage === "flash" && <div className="intro-flash" />}
+    </div>
+  );
+}
+
+// ============================================================
+// MAIN MENU
+// ============================================================
+function MainMenu({ onPlay, onSettings }) {
+  return (
+    <div className="main-menu">
+      <div style={{ marginBottom: 8 }}>
+        <SlotMachine />
+      </div>
+      <h1 className="menu-title">BITCOIN<br/>TETRIS PARTY</h1>
+      <p className="menu-subtitle">Stack word blocks. Verify zero.</p>
+      <div className="menu-buttons">
+        <button className="btn btn-play" onClick={onPlay}>▶ Play</button>
+        <button className="btn btn-settings" onClick={onSettings}>⚙ Settings</button>
+      </div>
+      <AdSlot slotId="menu-banner" format="horizontal" style={{ maxWidth:728, margin:"12px auto 0" }} />
+      <SafetyBadge />
+    </div>
+  );
+}
+
+// ============================================================
+// SETTINGS SCREEN
+// ============================================================
+function SettingsScreen({ config, setConfig, onStart, onBack }) {
+  const [name, setName] = useState(config.name || "");
+  const [wordCount, setWordCount] = useState(config.wordCount || "12");
+  const [selected, setSelected] = useState(new Set(config.categories || []));
+
+  const allWords = window.BIP39_4LETTER;
+  const validLetters = useMemo(() => {
+    const s = new Set();
+    allWords.forEach(w => s.add(w[0]));
+    return s;
+  }, [allWords]);
+
+  const pool = useMemo(() => {
+    if (selected.size === 0) return allWords;
+    return allWords.filter(w => selected.has(w[0]));
+  }, [selected, allWords]);
+
+  const validName = /^[A-Za-z0-9_-]{1,20}$/.test(name);
+  const canStart = (validName || true) && pool.length > 0; // name optional
+
+  const toggle = (l) => {
+    if (!validLetters.has(l)) return;
+    const s = new Set(selected);
+    s.has(l) ? s.delete(l) : s.add(l);
+    setSelected(s);
+  };
+
+  const handleStart = () => {
+    const effectiveName = name.trim() || "Player";
+    const resolvedMode = wordCount === "random"
+      ? (new Uint32Array(1), crypto.getRandomValues(new Uint32Array(1))[0] % 2 === 0 ? "12" : "24")
+      : wordCount;
+    setConfig({ name: effectiveName, wordCount, categories: [...selected], pool, resolvedMode });
+    saveStats({ lastName: effectiveName, players: [...new Set([...(loadStats().players || []), effectiveName])] });
+    onStart();
+  };
+
+  return (
+    <div className="settings-screen">
+      <button className="btn btn-sm settings-back" onClick={onBack}>← Back</button>
+      <h2 className="settings-title">⚙ Settings</h2>
+      <div className="settings-inner">
+
+        {/* Left: name + mode */}
+        <div className="panel col" style={{ flex: "1 1 280px" }}>
+          <h3 style={{ margin: 0, fontSize: 18 }}>Player</h3>
+          <label style={{ fontWeight: 800, fontSize: 13 }}>Name (optional)</label>
+          <input value={name} onChange={e => setName(e.target.value.slice(0, 20))}
+            placeholder="satoshi_kid"
+            style={{ padding: "10px", border: "3px solid var(--ink)", borderRadius: 10, fontSize: 15, fontWeight: 700, fontFamily: "inherit" }} />
+
+          <label style={{ fontWeight: 800, fontSize: 13, marginTop: 8 }}>Mode</label>
+          <div style={{ display: "flex", gap: 8 }}>
+            {["12", "24", "random"].map(m => (
+              <button key={m}
+                className={"btn btn-sm" + (wordCount === m ? " btn-gold" : "")}
+                onClick={() => setWordCount(m)}>
+                {m === "random" ? "🎲 Rnd" : `${m}w`}
+              </button>
+            ))}
+          </div>
+          <div style={{ marginTop: 12, padding: "10px", background: "rgba(0,0,0,.04)", borderRadius: 10 }}>
+            <div style={{ fontSize: 12, color: "#666" }}>Pool size: <strong>{pool.length}</strong> words</div>
+            <div style={{ fontSize: 12, color: "#666" }}>
+              {selected.size === 0 ? "Full alphabet" : `Letters: ${[...selected].join("").toUpperCase()}`}
+            </div>
+          </div>
+          {pool.length === 0 && <div style={{ color: "var(--red)", fontSize: 12 }}>No words for this selection.</div>}
+        </div>
+
+        {/* Right: categories */}
+        <div className="panel col" style={{ flex: "2 1 420px" }}>
+          <h3 style={{ margin: 0, fontSize: 18 }}>🔤 Word Categories</h3>
+          <p style={{ fontSize: 12, color: "#666", margin: "0 0 8px" }}>
+            Select starting letters. Each falling piece carries a 4-letter BIP-39 word.
+          </p>
+          <div className="cube-grid">
+            {ALPHABET.map(l => (
+              <div key={l}
+                className={"cube" + (selected.has(l) ? " selected" : "") + (!validLetters.has(l) ? " disabled" : "")}
+                onClick={() => toggle(l)}>
+                {l.toUpperCase()}
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: 8, marginTop: 12, justifyContent: "flex-end", flexWrap: "wrap" }}>
+            <button className="btn btn-sm" onClick={() => setSelected(new Set())}>Reset</button>
+            <button className="btn btn-play" disabled={!canStart} onClick={handleStart}
+              style={{ fontSize: 16, padding: "12px 28px" }}>
+              ▶ Start
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <SafetyBadge />
+    </div>
+  );
+}
+
+// ============================================================
+// NEXT PIECE PREVIEW
+// ============================================================
+function NextPreview({ piece }) {
+  const grid = Array.from({ length: 4 }, () => Array(4).fill(null));
+  for (const cell of E.getCells({ ...piece, r: 0, c: 0 })) {
+    if (cell.localR < 4 && cell.localC < 4)
+      grid[cell.localR][cell.localC] = { color: piece.color, letter: piece.letters[cell.letterIdx] };
+  }
+  return (
+    <div className="mini-board">
+      {grid.flat().map((c, i) => (
+        <div key={i} className={"mini-cell" + (c ? " filled" : "")}
+          style={c ? { "--c": c.color } : {}} />
+      ))}
+    </div>
+  );
+}
+
+// ============================================================
+// PARTICLE LAYER
+// ============================================================
+function ParticleLayer({ particles, popups }) {
+  return (
+    <div className="particle-layer">
+      {particles.map(p => (
+        <div key={p.id} className="particle"
+          style={{
+            left: p.x, top: p.y,
+            background: p.color,
+            "--pdx": p.dx + "px",
+            "--pdy": p.dy + "px",
+            "--dur": p.dur + "s",
+          }} />
+      ))}
+      {popups.map(p => (
+        <div key={p.id} className="score-popup"
+          style={{ left: p.x, top: p.y }}>
+          {p.text}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ============================================================
+// GAME SHELL — full-screen gameplay
+// ============================================================
+function GameShell({ config, onGameOver, pushToast }) {
+  const [board, setBoard] = useState(E.emptyBoard);
+  const [piece, setPiece] = useState(() => E.spawnPiece(config.pool));
+  const [next, setNext] = useState(() => E.spawnPiece(config.pool));
+  const [score, setScore] = useState(0);
+  const [lines, setLines] = useState(0);
+  const [level, setLevel] = useState(1);
+  const [collectedWords, setCollectedWords] = useState([]);
+  const [tickets, setTickets] = useState([]);
+  const [flashRows, setFlashRows] = useState([]);
+  const [paused, setPaused] = useState(false);
+  const [particles, setParticles] = useState([]);
+  const [popups, setPopups] = useState([]);
+  const [difficulty, setDifficulty] = useState(4);
+  const [isTouch] = useState(() => "ontouchstart" in window);
+
+  const boardRef = useRef(null);
+  const wordsPerTicket = config.resolvedMode === "24" ? 24 : 12;
+
+  // score ref for closure access
+  const scoreRef = useRef(score);
+  scoreRef.current = score;
+  const linesRef = useRef(lines);
+  linesRef.current = lines;
+  const levelRef = useRef(level);
+  levelRef.current = level;
+
+  // --- spawn particles on line clear ---
+  const spawnParticles = useCallback((clearedRowsArg, numLines) => {
+    if (!boardRef.current) return;
+    const rect = boardRef.current.getBoundingClientRect();
+    const cellH = rect.height / E.ROWS;
+    const cellW = rect.width / E.COLS;
+
+    const colors = Object.values(E.COLORS);
+    const newParticles = [];
+    clearedRowsArg.forEach(r => {
+      const y = r * cellH;
+      for (let i = 0; i < 20; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 40 + Math.random() * 100;
+        newParticles.push({
+          id: crypto.randomUUID(),
+          x: Math.random() * rect.width,
+          y,
+          dx: Math.cos(angle) * speed,
+          dy: Math.sin(angle) * speed - 40,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          dur: 0.5 + Math.random() * 0.3,
+        });
+      }
+    });
+    const pts = scoreFor(numLines, levelRef.current);
+    const popup = {
+      id: crypto.randomUUID(),
+      x: rect.width / 2 - 20,
+      y: rect.height / 2,
+      text: `+${pts}`,
+    };
+    setParticles(p => [...p, ...newParticles]);
+    setPopups(p => [...p, popup]);
+    // cleanup
+    setTimeout(() => {
+      const ids = new Set(newParticles.map(x => x.id));
+      setParticles(p => p.filter(x => !ids.has(x.id)));
+    }, 900);
+    setTimeout(() => {
+      setPopups(p => p.filter(x => x.id !== popup.id));
+    }, 900);
+  }, []);
+
+  function scoreFor(l, lv) { return [0,100,300,500,800][l] * (lv || 1); }
+
+  // --- lock piece ---
+  const lockAndAdvance = useCallback((p) => {
+    const newBoard = E.lockPiece(board, p);
+    const { board: cleared, cleared: nLines, collectedWords: gotWords, clearedRows } = E.clearLines(newBoard);
+
+    if (nLines > 0) {
+      setFlashRows(clearedRows);
+      setTimeout(() => setFlashRows([]), 350);
+      spawnParticles(clearedRows, nLines);
+    }
+
+    setBoard(cleared);
+
+    if (nLines > 0) {
+      setLines(l => {
+        const nl = l + nLines;
+        setLevel(Math.floor(nl / 10) + 1);
+        return nl;
+      });
+      setScore(s => s + scoreFor(nLines, levelRef.current));
+    }
+
+    if (gotWords.length > 0) {
+      setCollectedWords(prev => [...prev, ...gotWords]);
+      gotWords.forEach(w => pushToast(`Word: ${w.toUpperCase()}`));
+    }
+
+    // spawn next piece
+    const newPiece = {
+      ...next,
+      r: -1,
+      c: Math.floor(E.COLS / 2) - Math.ceil(next.shape[0].length / 2),
+    };
+    if (E.collides(cleared, newPiece)) {
+      // game over
+      onGameOver({
+        score: scoreRef.current,
+        lines: linesRef.current,
+        tickets,
+        collectedWords: collectedWords.concat(gotWords),
+        name: config.name,
+        reason: "blocks",
+      });
+      return;
+    }
+    setPiece(newPiece);
+    setNext(E.spawnPiece(config.pool));
+  }, [board, next, config.pool, tickets, collectedWords, onGameOver, pushToast, spawnParticles]);
+
+  // --- ticket creation ---
+  useEffect(() => {
+    const completedTickets = Math.floor(collectedWords.length / wordsPerTicket);
+    if (completedTickets > tickets.length) {
+      const slice = collectedWords.slice(tickets.length * wordsPerTicket, completedTickets * wordsPerTicket);
+      const newTicket = {
+        id: crypto.randomUUID(),
+        number: tickets.length + 1,
+        mode: config.resolvedMode,
+        words: slice,
+        score: scoreRef.current,
+        verified: false,
+        validBip39: false,
+      };
+      setTickets(t => [...t, newTicket]);
+      pushToast(`🎟 Ticket #${newTicket.number} complete!`);
+    }
+  }, [collectedWords, wordsPerTicket, tickets.length, config.resolvedMode, pushToast]);
+
+  // --- movement helpers ---
+  const tryMove = useCallback((dx, dy) => {
+    setPiece(p => {
+      const np = { ...p, c: p.c + dx, r: p.r + dy };
+      return E.collides(board, np) ? p : np;
+    });
+  }, [board]);
+
+  const rotate = useCallback(() => {
+    setPiece(p => {
+      const np = { ...p, shape: E.rotateShape(p.shape) };
+      for (const dx of [0, -1, 1, -2, 2]) {
+        const test = { ...np, c: np.c + dx };
+        if (!E.collides(board, test)) return test;
+      }
+      return p;
+    });
+  }, [board]);
+
+  const softDrop = useCallback(() => {
+    setPiece(p => {
+      const np = { ...p, r: p.r + 1 };
+      if (E.collides(board, np)) {
+        setTimeout(() => lockAndAdvance(p), 0);
+        return p;
+      }
+      setScore(s => s + 1);
+      return np;
+    });
+  }, [board, lockAndAdvance]);
+
+  const hardDrop = useCallback(() => {
+    setPiece(p => {
+      let test = p;
+      let dist = 0;
+      while (!E.collides(board, { ...test, r: test.r + 1 })) {
+        test = { ...test, r: test.r + 1 };
+        dist++;
+      }
+      setScore(s => s + dist * 2);
+      setTimeout(() => lockAndAdvance(test), 0);
+      return test;
+    });
+  }, [board, lockAndAdvance]);
+
+  // --- gravity ---
+  useEffect(() => {
+    if (paused) return;
+    const speed = Math.max(80, 700 - difficulty * 60 - (level - 1) * 30);
+    const id = setInterval(softDrop, speed);
+    return () => clearInterval(id);
+  }, [paused, difficulty, level, softDrop]);
+
+  // --- keyboard ---
+  useEffect(() => {
+    if (paused) return;
+    const handle = (e) => {
+      if (e.key === "ArrowLeft")  { e.preventDefault(); tryMove(-1, 0); }
+      else if (e.key === "ArrowRight") { e.preventDefault(); tryMove(1, 0); }
+      else if (e.key === "ArrowDown")  { e.preventDefault(); softDrop(); }
+      else if (e.key === "ArrowUp" || e.key === "x") { e.preventDefault(); rotate(); }
+      else if (e.key === " ")     { e.preventDefault(); hardDrop(); }
+      else if (e.key === "p" || e.key === "P") { setPaused(g => !g); }
+    };
+    window.addEventListener("keydown", handle);
+    return () => window.removeEventListener("keydown", handle);
+  }, [paused, tryMove, rotate, softDrop, hardDrop]);
+
+  // --- ghost piece ---
+  const ghostPiece = useMemo(() => {
+    let test = piece;
+    while (!E.collides(board, { ...test, r: test.r + 1 })) {
+      test = { ...test, r: test.r + 1 };
+    }
+    return test;
+  }, [piece, board]);
+
+  // --- render view ---
+  const renderCells = useMemo(() => {
+    const view = board.map(r => [...r]);
+    // Ghost
+    for (const cell of E.getCells(ghostPiece)) {
+      if (cell.r >= 0 && cell.r < E.ROWS && cell.c >= 0 && cell.c < E.COLS) {
+        if (!view[cell.r][cell.c]) {
+          view[cell.r][cell.c] = { ghost: true };
+        }
+      }
+    }
+    // Active piece
+    for (const cell of E.getCells(piece)) {
+      if (cell.r >= 0 && cell.r < E.ROWS && cell.c >= 0 && cell.c < E.COLS) {
+        view[cell.r][cell.c] = {
+          color: piece.color,
+          letter: piece.letters[cell.letterIdx],
+          word: piece.word,
+          pieceId: piece.pieceId,
+          live: true,
+        };
+      }
+    }
+    return view;
+  }, [board, piece, ghostPiece]);
+
+  // --- HTP (high time preference) end ---
+  const onHTP = () => {
+    let finalTickets = tickets;
+    if (tickets.length === 0) {
+      const words = Array.from({ length: wordsPerTicket }, () => {
+        const arr = new Uint32Array(1);
+        crypto.getRandomValues(arr);
+        return config.pool[arr[0] % config.pool.length];
+      });
+      finalTickets = [{
+        id: crypto.randomUUID(), number: 1, mode: config.resolvedMode,
+        words, score: scoreRef.current, verified: false, validBip39: false, emergency: true,
+      }];
+      pushToast("Emergency ticket generated");
+    }
+    onGameOver({
+      score: scoreRef.current, lines: linesRef.current,
+      tickets: finalTickets, collectedWords, name: config.name, reason: "htp",
+    });
+  };
+
+  const progressPct = ((collectedWords.length % wordsPerTicket) / wordsPerTicket) * 100;
+
+  return (
+    <div className="game-shell">
+      {/* HUD */}
+      <div className="game-hud">
+        <span className="hud-name">🎮 {config.name}</span>
+        <span className="hud-stat">Score <strong>{score.toLocaleString()}</strong></span>
+        <span className="hud-stat">Lines <strong>{lines}</strong></span>
+        <span className="hud-stat">Lvl <strong>{level}</strong></span>
+        <span className="hud-stat">🎟 <strong>{tickets.length}</strong></span>
+        <div className="hud-spacer" />
+        <button className="btn btn-sm" onClick={() => setPaused(p => !p)}
+          style={{ background: paused ? "#4CAF50" : "rgba(255,255,255,.1)", borderColor: "rgba(255,255,255,.3)", color: "white" }}>
+          {paused ? "▶ Resume" : "⏸ Pause"}
+        </button>
+        <button className="btn btn-sm btn-danger" onClick={onHTP} title="End round, keep tickets">
+          🛑 End
+        </button>
+      </div>
+
+      {/* Game body */}
+      <div className="game-body">
+        {/* LEFT PANEL */}
+        <div className="game-left">
+          <div className="panel-soft">
+            <div style={{ fontWeight: 900, fontSize: 13, marginBottom: 6, color: "#ffd700" }}>📚 Word Bank</div>
+            <div className="small muted" style={{ marginBottom: 4 }}>
+              {config.resolvedMode}-word mode
+            </div>
+            <div className="progress-bar" style={{ marginBottom: 6 }}>
+              <div className="progress-fill" style={{ width: progressPct + "%" }} />
+            </div>
+            <div className="small muted" style={{ marginBottom: 8 }}>
+              {collectedWords.length % wordsPerTicket} / {wordsPerTicket} words
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 3, maxHeight: 180, overflow: "auto" }}>
+              {collectedWords.slice(-24).map((w, i) => (
+                <span key={i} className="word-chip">
+                  <span className="num">{collectedWords.length - 24 + i + 1 > 0 ? collectedWords.length - 24 + i + 1 : i + 1}</span>
+                  {w}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="panel-soft">
+            <div style={{ fontWeight: 900, fontSize: 13, marginBottom: 6, color: "#ffd700" }}>🎮 Controls</div>
+            <div className="small" style={{ color: "rgba(255,255,255,.7)", lineHeight: 1.9 }}>
+              <div><span className="kbd">←</span><span className="kbd">→</span> move</div>
+              <div><span className="kbd">↑</span> rotate</div>
+              <div><span className="kbd">↓</span> soft drop</div>
+              <div><span className="kbd">Space</span> hard drop</div>
+              <div><span className="kbd">P</span> pause</div>
+            </div>
+          </div>
+          <div className="panel-soft">
+            <div style={{ fontWeight: 900, fontSize: 13, marginBottom: 6, color: "#ffd700" }}>🛡 Trust</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <span className="trust-pill">No real seed</span>
+              <span className="trust-pill">Local-first</span>
+              <span className="trust-pill">Demo only</span>
+            </div>
+          </div>
+        </div>
+
+        {/* CENTER: Board */}
+        <div className="game-center">
+          <div className="board-wrap" ref={boardRef}>
+            <div className="board">
+              {renderCells.flatMap((row, r) => row.map((cell, c) => (
+                <div key={`${r}-${c}`}
+                  className={"cell" +
+                    (cell && !cell.ghost ? " filled" : "") +
+                    (cell && cell.ghost ? " ghost" : "") +
+                    (flashRows.includes(r) ? " flash" : "")
+                  }
+                  style={cell && !cell.ghost ? { "--c": cell.color } : {}}>
+                  {cell && !cell.ghost && cell.letter ? cell.letter.toUpperCase() : null}
+                </div>
+              )))}
+            </div>
+            {paused && (
+              <div className="pause-overlay">
+                <div className="pause-text">PAUSED</div>
+              </div>
+            )}
+            <ParticleLayer particles={particles} popups={popups} />
+          </div>
+        </div>
+
+        {/* RIGHT PANEL */}
+        <div className="game-right">
+          <div className="panel-soft">
+            <div style={{ fontWeight: 900, fontSize: 13, marginBottom: 6, color: "#ffd700" }}>⏭ Next</div>
+            <NextPreview piece={next} />
+            <div style={{ marginTop: 8 }}>
+              <div className="small muted">Current</div>
+              <div style={{ fontFamily: "ui-monospace", fontWeight: 900, fontSize: 16 }}>{piece.word.toUpperCase()}</div>
+              <div className="small muted" style={{ marginTop: 4 }}>Next</div>
+              <div style={{ fontFamily: "ui-monospace", fontWeight: 900, fontSize: 13 }}>{next.word.toUpperCase()}</div>
+            </div>
+          </div>
+          <div className="panel-soft">
+            <div style={{ fontWeight: 900, fontSize: 13, marginBottom: 6, color: "#ffd700" }}>⚡ Speed</div>
+            <input type="range" min="1" max="10" value={difficulty}
+              onChange={e => setDifficulty(+e.target.value)}
+              style={{ width: "100%", accentColor: "#FFD700" }} />
+            <div className="small muted">Level: <strong style={{ color: "white" }}>{level}</strong> · Diff: <strong style={{ color: "white" }}>{difficulty}</strong></div>
+          </div>
+          <div className="panel-soft">
+            <div style={{ fontWeight: 900, fontSize: 13, marginBottom: 6, color: "#ffd700" }}>🎟 Tickets</div>
+            <div style={{ fontSize: 28, fontWeight: 900, color: "white" }}>{tickets.length}</div>
+            <div className="progress-bar" style={{ marginTop: 6 }}>
+              <div className="progress-fill" style={{ width: progressPct + "%" }} />
+            </div>
+            <div className="small muted" style={{ marginTop: 4 }}>
+              {collectedWords.length % wordsPerTicket}/{wordsPerTicket} words
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile controls */}
+      <div className={"mobile-controls" + (isTouch ? " visible" : "")}>
+        <div className="mc-group">
+          <button className="mc-btn"
+            onTouchStart={e => { e.preventDefault(); tryMove(-1, 0); }}>◀</button>
+          <button className="mc-btn"
+            onTouchStart={e => { e.preventDefault(); tryMove(1, 0); }}>▶</button>
+        </div>
+        <div className="mc-separator" />
+        <div className="mc-group">
+          <button className="mc-btn"
+            onTouchStart={e => { e.preventDefault(); rotate(); }}>↻</button>
+        </div>
+        <div className="mc-separator" />
+        <div className="mc-group">
+          <button className="mc-btn"
+            onTouchStart={e => { e.preventDefault(); softDrop(); }}>▼</button>
+          <button className="mc-btn wide"
+            onTouchStart={e => { e.preventDefault(); hardDrop(); }}>⬇⬇ Drop</button>
+        </div>
+      </div>
+
+      <SafetyBadge />
+    </div>
+  );
+}
+
+// ============================================================
+// GAME OVER SCREEN
+// ============================================================
+function GameOverScreen({ stats, onPlayAgain, onVerify, onShare }) {
+  const [showShareCard, setShowShareCard] = useState(false);
+  return (
+    <div className="gameover-screen">
+      <h1 className="gameover-title">GAME OVER</h1>
+      <p style={{ color: "rgba(255,255,255,.7)", fontSize: 16 }}>
+        {stats.reason === "htp" ? "High time preference activated." : "Blocks reached the top."}
+      </p>
+      <div className="stat-grid">
+        <div className="stat-block">
+          <div className="stat-label">SCORE</div>
+          <div className="stat-value">{stats.score.toLocaleString()}</div>
+        </div>
+        <div className="stat-block">
+          <div className="stat-label">LINES</div>
+          <div className="stat-value">{stats.lines}</div>
+        </div>
+        <div className="stat-block">
+          <div className="stat-label">TICKETS</div>
+          <div className="stat-value">{stats.tickets.length}</div>
+        </div>
+        <div className="stat-block">
+          <div className="stat-label">WORDS</div>
+          <div className="stat-value">{stats.collectedWords.length}</div>
+        </div>
+      </div>
+      <AdSlot slotId="gameover-banner" format="horizontal" style={{ maxWidth:728, margin:"4px auto" }} />
+      <p style={{ color: "rgba(255,255,255,.6)", maxWidth: 500, fontSize: 14 }}>
+        Verify your tickets to see why random guessing always returns <strong style={{ color: "var(--gold)" }}>0 BTC</strong>.
+      </p>
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+        <button className="btn btn-gold" onClick={onVerify}>🔍 Verify Tickets</button>
+        <button className="btn btn-play" onClick={onPlayAgain}>▶ Play Again</button>
+        <button className="btn" onClick={() => setShowShareCard(true)}>📤 Share</button>
+      </div>
+      {showShareCard && <ShareModal stats={stats} onClose={() => setShowShareCard(false)} />}
+      <SafetyBadge />
+    </div>
+  );
+}
+
+// ============================================================
+// VERIFY MODE
+// ============================================================
+function VerifyMode({ stats, onBack, onPlayAgain }) {
+  const [tickets, setTickets] = useState(stats.tickets);
+
+  const verifyTicket = async (id) => {
+    const t = tickets.find(x => x.id === id);
+    if (!t) return;
+    const addr = await fakeAddressFromWords(t.words);
+    setTickets(ts => ts.map(x =>
+      x.id === id ? { ...x, verified: true, generatedAddress: addr, balance: 0, match: false } : x
+    ));
+  };
+
+  const verifyAll = async () => {
+    for (const t of tickets) if (!t.verified) await verifyTicket(t.id);
+  };
+
+  const allVerified = tickets.length > 0 && tickets.every(t => t.verified);
+
+  return (
+    <div className="verify-screen">
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
+          <button className="btn btn-sm" onClick={onBack}>← Back</button>
+          <h2 style={{ color: "white", margin: 0 }}>🔍 Verify Mode</h2>
+          <span className="trust-pill">Local-first</span>
+          <span className="trust-pill">No keys derived</span>
+          <div style={{ flex: 1 }} />
+          <button className="btn btn-gold btn-sm" onClick={verifyAll}>Verify All</button>
+          <button className="btn btn-sm" onClick={onPlayAgain}>▶ Play Again</button>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: 12 }}>
+          {tickets.length === 0 && (
+            <div className="panel-dark">No tickets collected. Play a round first!</div>
+          )}
+          {tickets.map(t => (
+            <TicketCard key={t.id} ticket={t} onVerify={() => verifyTicket(t.id)} />
+          ))}
+        </div>
+
+        {allVerified && (
+          <div style={{ textAlign: "center", padding: "32px 16px" }}>
+            <div className="stamp">VERIFIED ZERO</div>
+            <h3 style={{ color: "white", margin: "12px 0 4px" }}>0 BTC, as expected.</h3>
+            <p style={{ color: "rgba(255,255,255,.6)" }}>
+              Bitcoin is secure because random guessing always fails. You joined the <strong style={{ color: "var(--gold)" }}>0 BTC Club</strong>.
+            </p>
+          </div>
+        )}
+      </div>
+      <SafetyBadge />
+    </div>
+  );
+}
+
+function TicketCard({ ticket, onVerify }) {
+  return (
+    <div className={"ticket" + (ticket.verified ? " verified" : "")}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+        <strong style={{ fontSize: 13 }}>Ticket #{String(ticket.number).padStart(3, "0")}</strong>
+        <span style={{ fontSize: 11, color: "rgba(255,255,255,.5)" }}>
+          {ticket.mode}-word{ticket.emergency ? " · emergency" : ""}
+        </span>
+      </div>
+      <div className="barcode" />
+      <div style={{ fontSize: 11, color: "rgba(255,255,255,.4)", marginBottom: 8 }}>
+        Educational gameplay phrase — checksum not validated
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 3, marginBottom: 10 }}>
+        {ticket.words.map((w, i) => (
+          <div key={i} className="word-chip">
+            <span className="num">{String(i + 1).padStart(2, "0")}</span>{w}
+          </div>
+        ))}
+      </div>
+      {!ticket.verified ? (
+        <div className="reveal" onClick={onVerify}>🪙 don't trust, verify</div>
+      ) : (
+        <div className="verified-panel">
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,.6)", marginBottom: 4 }}>Generated address (demo):</div>
+          <code style={{ fontSize: 10, wordBreak: "break-all", color: "#7be495" }}>{ticket.generatedAddress}</code>
+          <div style={{ marginTop: 8, fontSize: 14, fontWeight: 900, color: "#7be495" }}>✓ Verified balance: 0 BTC</div>
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,.5)" }}>Target match: NO — 0 BTC, as expected.</div>
+        </div>
+      )}
+      <div style={{ fontSize: 10, color: "rgba(255,255,255,.3)", marginTop: 8 }}>
+        ⚠ Demo phrase. Never use for real funds.
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// SHARE MODAL
+// ============================================================
+function ShareModal({ stats, onClose }) {
+  const text = `I played Bitcoin Tetris Party! Score ${stats.score.toLocaleString()} · ${stats.lines} lines · ${stats.tickets.length} tickets · 0 BTC verified. Stack word blocks. Verify zero. 🟩₿`;
+  const copy = () => navigator.clipboard.writeText(text).then(() => {});
+  return (
+    <div className="share-modal-bg" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="share-card">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <h3 style={{ margin: 0, color: "var(--gold)" }}>📤 Share Result</h3>
+          <button className="btn btn-sm" onClick={onClose} style={{ background: "rgba(255,255,255,.1)", borderColor: "rgba(255,255,255,.3)", color: "white" }}>✕</button>
+        </div>
+        <div style={{ background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.1)", borderRadius: 10, padding: 14, marginBottom: 14, fontSize: 13, lineHeight: 1.6 }}>
+          {text}
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button className="btn btn-sm btn-gold" onClick={copy}>📋 Copy</button>
+          <a className="btn btn-sm" style={{ background: "#1da1f2", borderColor: "#1585ca", color: "white" }}
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`}
+            target="_blank" rel="noopener">𝕏 Share</a>
+          <a className="btn btn-sm" style={{ background: "#ff4500", borderColor: "#cc3700", color: "white" }}
+            href={`https://reddit.com/submit?title=${encodeURIComponent("Bitcoin Tetris Party result")}&text=${encodeURIComponent(text)}`}
+            target="_blank" rel="noopener">Reddit</a>
+          <a className="btn btn-sm" style={{ background: "#229ed9", borderColor: "#1a7ea8", color: "white" }}
+            href={`https://t.me/share/url?url=${encodeURIComponent("https://bitcointetris.app")}&text=${encodeURIComponent(text)}`}
+            target="_blank" rel="noopener">Telegram</a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// ROOT APP — state machine
+// ============================================================
+function App() {
+  // phase: "menu" | "settings" | "intro" | "playing" | "gameOver" | "verify"
+  const [phase, setPhase] = useState("menu");
+  const [config, setConfig] = useState({
+    name: loadStats().lastName || "Player",
+    wordCount: "12",
+    categories: [],
+    pool: window.BIP39_4LETTER,
+    resolvedMode: "12",
+  });
+  const [gameStats, setGameStats] = useState(null);
+  const [toasts, setToasts] = useState([]);
+
+  const pushToast = useCallback((text) => {
+    const id = Math.random();
+    setToasts(t => [...t, { id, text }]);
+    setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 2200);
+  }, []);
+
+  const handleIntroComplete = useCallback(() => {
+    setPhase("playing");
+  }, []);
+
+  const handleGameOver = useCallback((stats) => {
+    setGameStats(stats);
+    setPhase("gameOver");
+    saveStats({ games: (loadStats().games || 0) + 1 });
+  }, []);
+
+  // When Play is clicked from menu, use current config (defaults) and go to intro
+  const handlePlay = () => {
+    // ensure pool is set
+    const pool = config.pool && config.pool.length > 0 ? config.pool : window.BIP39_4LETTER;
+    const resolvedMode = config.wordCount === "random"
+      ? (new Uint32Array(1), crypto.getRandomValues(new Uint32Array(1))[0] % 2 === 0 ? "12" : "24")
+      : (config.wordCount || "12");
+    setConfig(c => ({ ...c, pool, resolvedMode }));
+    setPhase("intro");
+  };
+
+  const handleSettingsStart = () => {
+    setPhase("intro");
+  };
+
+  const handlePlayAgain = () => {
+    setGameStats(null);
+    setPhase("menu");
+  };
+
+  return (
+    <>
+      {phase === "menu" && (
+        <MainMenu
+          onPlay={handlePlay}
+          onSettings={() => setPhase("settings")}
+        />
+      )}
+      {phase === "settings" && (
+        <SettingsScreen
+          config={config}
+          setConfig={setConfig}
+          onStart={handleSettingsStart}
+          onBack={() => setPhase("menu")}
+        />
+      )}
+      {phase === "intro" && (
+        <SlotMachineIntro onComplete={handleIntroComplete} />
+      )}
+      {phase === "playing" && config && (
+        <GameShell
+          config={config}
+          onGameOver={handleGameOver}
+          pushToast={pushToast}
+        />
+      )}
+      {phase === "gameOver" && gameStats && (
+        <GameOverScreen
+          stats={gameStats}
+          onPlayAgain={handlePlayAgain}
+          onVerify={() => setPhase("verify")}
+        />
+      )}
+      {phase === "verify" && gameStats && (
+        <VerifyMode
+          stats={gameStats}
+          onBack={() => setPhase("gameOver")}
+          onPlayAgain={handlePlayAgain}
+        />
+      )}
+      <ToastHost toasts={toasts} />
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+</script>
+</body>
+</html>
