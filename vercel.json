@@ -1,6 +1,14 @@
 {
+  "buildCommand": "",
+  "outputDirectory": ".",
   "rewrites": [
-    { "source": "/", "destination": "/bitcointetris.html" }
+    { "source": "/", "destination": "/bitcointetris.html" },
+    { "source": "/manifest.json",        "destination": "/public/manifest.json" },
+    { "source": "/icon-512.png",         "destination": "/public/icon-512.png" },
+    { "source": "/icon-192.png",         "destination": "/public/icon-192.png" },
+    { "source": "/apple-touch-icon.png", "destination": "/public/apple-touch-icon.png" },
+    { "source": "/favicon-32.png",       "destination": "/public/favicon-32.png" },
+    { "source": "/logo.svg",             "destination": "/public/logo.svg" }
   ],
   "headers": [
     {
