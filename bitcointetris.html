@@ -541,30 +541,157 @@ body {
 }
 
 /* ===================================================
-   MOBILE CONTROLS
+   MOBILE SIDEBAR (hidden on desktop, shown on mobile)
    =================================================== */
-.mobile-controls {
+.mobile-sidebar {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 5px;
+  min-width: 82px;
+  max-width: 88px;
+  background: rgba(0,0,0,.4);
+  border-left: 1px solid rgba(255,255,255,.1);
+  overflow: hidden;
+}
+.msb-section { flex: 0 0 auto; }
+.msb-label { font-size: 8px; font-weight: 900; color: rgba(255,215,0,.8); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1px; }
+.msb-value { font-size: 15px; font-weight: 900; color: white; line-height: 1.1; font-family: ui-monospace, monospace; }
+.msb-word { font-size: 11px; font-weight: 900; color: #7be495; font-family: ui-monospace, monospace; letter-spacing: 1px; }
+
+/* ===================================================
+   DEVICE MIDDLE BAR (mobile only)
+   =================================================== */
+.device-mid {
+  display: none;
   flex: 0 0 auto;
-  background: rgba(0,0,0,.5); border-top: 1px solid rgba(255,255,255,.08);
-  padding: 8px 12px; display: none;
-  gap: 8px; justify-content: center; align-items: center;
+  background: rgba(255,255,255,.04);
+  border-top: 1px solid rgba(255,255,255,.08);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  padding: 5px 16px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
 }
-.mobile-controls.visible { display: flex; }
-.mc-group { display: flex; gap: 6px; }
-.mc-btn {
-  width: 52px; height: 52px;
-  background: linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,.05));
-  border: 2px solid rgba(255,255,255,.3);
-  border-radius: 12px; font-size: 18px; cursor: pointer;
-  box-shadow: 0 3px 0 rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.2);
-  color: white; font-weight: 900;
-  display: flex; align-items: center; justify-content: center;
+.device-mid-btn {
+  background: rgba(255,255,255,.12);
+  border: 1.5px solid rgba(255,255,255,.25);
+  border-radius: 6px;
+  color: rgba(255,255,255,.9);
+  font-size: 10px; font-weight: 900; font-family: "Baloo 2", sans-serif;
+  padding: 4px 10px; cursor: pointer; letter-spacing: .5px;
+  box-shadow: 0 2px 0 rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.15);
   touch-action: manipulation; user-select: none;
-  transition: transform .05s, box-shadow .05s;
 }
-.mc-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,.4); }
-.mc-btn.wide { width: 90px; font-size: 14px; }
-.mc-separator { width: 1px; height: 40px; background: rgba(255,255,255,.15); margin: 0 4px; }
+.device-mid-btn:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,.3); }
+.device-mid-btn.end-btn {
+  background: linear-gradient(180deg, #e53935, #b71c1c);
+  border-color: #7f0000; color: white;
+  box-shadow: 0 2px 0 #7f0000, inset 0 1px 0 rgba(255,255,255,.2);
+}
+.device-mid-logo {
+  font-size: 11px; font-weight: 900; color: rgba(255,215,0,.5);
+  letter-spacing: 1.5px; user-select: none;
+}
+
+/* ===================================================
+   DEVICE CONTROLS — D-PAD + ACTION BUTTONS (mobile only)
+   =================================================== */
+.device-controls {
+  display: none;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px 20px 14px;
+  gap: 16px;
+}
+
+/* D-pad: 3×3 grid, corners invisible */
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 50px);
+  grid-template-rows: repeat(3, 50px);
+  gap: 3px;
+}
+.dpad-btn {
+  background: linear-gradient(160deg, #3a53d8, #2433a8);
+  border: 2px solid #152060;
+  border-radius: 10px;
+  color: white; font-size: 18px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #0d1245, inset 0 1px 0 rgba(255,255,255,.3);
+  touch-action: manipulation; user-select: none;
+}
+.dpad-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #0d1245; }
+.dpad-center {
+  background: #1a2258;
+  border-radius: 50%;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.5);
+  pointer-events: none;
+}
+.dpad-corner { background: transparent; pointer-events: none; }
+
+/* Action buttons (A / B) */
+.action-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.action-btn {
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  font-size: 13px; font-weight: 900; color: white; line-height: 1.1; text-align: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation; user-select: none;
+  border: 2px solid transparent;
+}
+.action-btn:active { transform: translateY(3px); }
+.action-btn-a {
+  background: linear-gradient(180deg, #d05820, #902808);
+  border-color: #601808;
+  box-shadow: 0 5px 0 #481008, inset 0 1px 0 rgba(255,255,255,.25);
+}
+.action-btn-a:active { box-shadow: 0 2px 0 #481008; }
+.action-btn-b {
+  background: linear-gradient(180deg, #e03030, #a01010);
+  border-color: #700808;
+  box-shadow: 0 5px 0 #500808, inset 0 1px 0 rgba(255,255,255,.25);
+}
+.action-btn-b:active { box-shadow: 0 2px 0 #500808; }
+.action-btn-drop {
+  width: 58px; height: 36px; border-radius: 10px;
+  background: linear-gradient(180deg, #2d8f2d, #1a551a);
+  border-color: #0d3a0d;
+  box-shadow: 0 4px 0 #0a2a0a, inset 0 1px 0 rgba(255,255,255,.2);
+  font-size: 10px;
+}
+.action-btn-drop:active { box-shadow: 0 1px 0 #0a2a0a; }
+.action-lbl { font-size: 7px; opacity: .8; }
+
+/* Device footer decoration (mobile only) */
+.device-footer {
+  display: none;
+  flex: 0 0 auto;
+  padding: 6px 20px 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+.device-speaker {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.speaker-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(255,255,255,.15);
+}
+.device-brand {
+  font-size: 9px; font-weight: 900; color: rgba(255,215,0,.3);
+  letter-spacing: 2px; user-select: none;
+}
 
 /* ===================================================
    PAUSE OVERLAY
@@ -685,18 +812,55 @@ body {
    RESPONSIVE
    =================================================== */
 @media (max-width: 768px) {
-  .game-left, .game-right { display: none; }
-  .mobile-controls.visible { display: flex; }
+  .game-left, .game-right { display: none !important; }
+  /* Device shell */
+  .game-shell { background: #18182a; }
+  /* Hide desktop HUD — device-mid has PAUSE/END */
+  .game-hud { display: none !important; }
+  /* Screen frame */
+  .game-body {
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    margin: 8px 10px 0;
+    background: #060e06;
+    border: 3px solid #3a3a3a;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 48dvh;
+    gap: 0;
+    padding: 0;
+  }
+  .game-center {
+    flex: 0 0 auto;
+    padding: 4px;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
   .board {
-    height: min(calc(100dvh - 52px - 84px), calc(100vw * 1.8));
+    height: calc(48dvh - 14px);
     width: auto;
     max-height: none;
+    aspect-ratio: 10/20;
+  }
+  /* Show mobile-only UI */
+  .mobile-sidebar { display: flex; }
+  .device-mid { display: flex; }
+  .device-controls { display: flex; }
+  .device-footer { display: flex; }
+  /* Safety badge: top-left corner, above the screen */
+  .safety-badge {
+    bottom: auto;
+    top: 4px;
+    left: 8px;
+    font-size: 9px;
+    padding: 3px 7px;
   }
   .cube-grid { grid-template-columns: repeat(7, 1fr); }
   .settings-inner { flex-direction: column; }
 }
 @media (min-width: 769px) {
-  .mobile-controls { display: none !important; }
   .board {
     width: calc((100dvh - 72px) / 2);
     height: calc(100dvh - 72px);
@@ -1632,7 +1796,7 @@ function GameShell({ config, onGameOver, pushToast }) {
           </div>
         </div>
 
-        {/* RIGHT PANEL */}
+        {/* RIGHT PANEL (desktop only) */}
         <div className="game-right">
           <div className="panel-soft">
             <div style={{ fontWeight: 900, fontSize: 13, marginBottom: 6, color: "#ffd700" }}>⏭ Next</div>
@@ -1662,27 +1826,96 @@ function GameShell({ config, onGameOver, pushToast }) {
             </div>
           </div>
         </div>
+
+        {/* MOBILE SIDEBAR — shown on mobile only (CSS controls visibility) */}
+        <div className="mobile-sidebar">
+          <div className="msb-section">
+            <div className="msb-label">Next</div>
+            <NextPreview piece={next} />
+          </div>
+          <div className="msb-section">
+            <div className="msb-label">Now</div>
+            <div className="msb-word">{piece.word.toUpperCase()}</div>
+          </div>
+          <div className="msb-section">
+            <div className="msb-label">Score</div>
+            <div className="msb-value">{score.toLocaleString()}</div>
+          </div>
+          <div className="msb-section">
+            <div className="msb-label">Level</div>
+            <div className="msb-value">{level}</div>
+          </div>
+          <div className="msb-section">
+            <div className="msb-label">🎟 Tickets</div>
+            <div className="msb-value">{tickets.length}</div>
+          </div>
+          <div className="msb-section" style={{ marginTop: "auto" }}>
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: progressPct + "%" }} />
+            </div>
+            <div style={{ fontSize: 8, color: "rgba(255,255,255,.5)", marginTop: 2 }}>
+              {collectedWords.length % wordsPerTicket}/{wordsPerTicket}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Mobile controls */}
-      <div className={"mobile-controls" + (isTouch ? " visible" : "")}>
-        <div className="mc-group">
-          <button className="mc-btn"
-            onTouchStart={e => { e.preventDefault(); tryMove(-1, 0); }}>◀</button>
-          <button className="mc-btn"
-            onTouchStart={e => { e.preventDefault(); tryMove(1, 0); }}>▶</button>
+      {/* DEVICE MIDDLE BAR — mobile only */}
+      <div className="device-mid">
+        <button className="device-mid-btn" onClick={() => setPaused(p => !p)}>
+          {paused ? "▶ RESUME" : "⏸ PAUSE"}
+        </button>
+        <span className="device-mid-logo">BTC TETRIS</span>
+        <button className="device-mid-btn end-btn" onClick={onHTP}>
+          🛑 END
+        </button>
+      </div>
+
+      {/* DEVICE CONTROLS — handheld D-pad + action buttons, mobile only */}
+      <div className="device-controls">
+        {/* Left: D-pad */}
+        <div className="dpad">
+          {/* row 1 */}
+          <div className="dpad-corner" />
+          <button className="dpad-btn" onTouchStart={e => { e.preventDefault(); rotate(); }}>↻</button>
+          <div className="dpad-corner" />
+          {/* row 2 */}
+          <button className="dpad-btn" onTouchStart={e => { e.preventDefault(); tryMove(-1, 0); }}>◀</button>
+          <div className="dpad-center" />
+          <button className="dpad-btn" onTouchStart={e => { e.preventDefault(); tryMove(1, 0); }}>▶</button>
+          {/* row 3 */}
+          <div className="dpad-corner" />
+          <button className="dpad-btn" onTouchStart={e => { e.preventDefault(); softDrop(); }}>▼</button>
+          <div className="dpad-corner" />
         </div>
-        <div className="mc-separator" />
-        <div className="mc-group">
-          <button className="mc-btn"
-            onTouchStart={e => { e.preventDefault(); rotate(); }}>↻</button>
+
+        {/* Right: action buttons */}
+        <div className="action-col">
+          <button className="action-btn action-btn-drop"
+            onTouchStart={e => { e.preventDefault(); hardDrop(); }}>
+            ⬇ DROP
+          </button>
+          <div style={{ display: "flex", gap: 10 }}>
+            <button className="action-btn action-btn-b"
+              onTouchStart={e => { e.preventDefault(); softDrop(); }}>
+              B<br /><span className="action-lbl">DOWN</span>
+            </button>
+            <button className="action-btn action-btn-a"
+              onTouchStart={e => { e.preventDefault(); rotate(); }}>
+              A<br /><span className="action-lbl">TURN</span>
+            </button>
+          </div>
         </div>
-        <div className="mc-separator" />
-        <div className="mc-group">
-          <button className="mc-btn"
-            onTouchStart={e => { e.preventDefault(); softDrop(); }}>▼</button>
-          <button className="mc-btn wide"
-            onTouchStart={e => { e.preventDefault(); hardDrop(); }}>⬇⬇ Drop</button>
+      </div>
+
+      {/* Device footer — decorative, mobile only */}
+      <div className="device-footer">
+        <div className="device-speaker">
+          {[0,1,2,3,4].map(i => <div key={i} className="speaker-dot" />)}
+        </div>
+        <span className="device-brand">BITHOPE</span>
+        <div className="device-speaker">
+          {[0,1,2,3,4].map(i => <div key={i} className="speaker-dot" />)}
         </div>
       </div>
 
