@@ -122,6 +122,8 @@ body {
   background: var(--white); color: var(--ink);
   box-shadow: 0 5px 0 var(--ink);
   transition: transform .08s ease, box-shadow .08s ease;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
   user-select: none; text-decoration: none;
 }
 .btn:hover  { transform: translateY(-2px); box-shadow: 0 7px 0 var(--ink); }
@@ -581,7 +583,10 @@ body {
   font-size: 10px; font-weight: 900; font-family: "Baloo 2", sans-serif;
   padding: 4px 10px; cursor: pointer; letter-spacing: .5px;
   box-shadow: 0 2px 0 rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.15);
-  touch-action: manipulation; user-select: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .device-mid-btn:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,.3); }
 .device-mid-btn.end-btn {
@@ -621,7 +626,10 @@ body {
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   box-shadow: 0 4px 0 #0d1245, inset 0 1px 0 rgba(255,255,255,.3);
-  touch-action: manipulation; user-select: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .dpad-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #0d1245; }
 .dpad-center {
@@ -645,7 +653,10 @@ body {
   font-size: 13px; font-weight: 900; color: white; line-height: 1.1; text-align: center;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   cursor: pointer;
-  touch-action: manipulation; user-select: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
   border: 2px solid transparent;
 }
 .action-btn:active { transform: translateY(3px); }
@@ -823,12 +834,12 @@ body {
     flex-direction: row;
     align-items: stretch;
     justify-content: center;
-    margin: 8px 10px 0;
+    margin: max(8px, env(safe-area-inset-top)) 10px 0;
     background: #060e06;
     border: 3px solid #3a3a3a;
     border-radius: 8px;
     overflow: hidden;
-    height: 48dvh;
+    height: 56dvh;
     gap: 0;
     padding: 0;
   }
@@ -839,7 +850,7 @@ body {
     justify-content: flex-start;
   }
   .board {
-    height: calc(48dvh - 14px);
+    height: calc(56dvh - 14px);
     width: auto;
     max-height: none;
     aspect-ratio: 10/20;
@@ -1901,6 +1912,7 @@ function GameShell({ config, onGameOver, pushToast }) {
               B<br /><span className="action-lbl">DOWN</span>
             </button>
             <button className="action-btn action-btn-a"
+              style={{ marginTop: "-20px" }}
               onTouchStart={e => { e.preventDefault(); rotate(); }}>
               A<br /><span className="action-lbl">TURN</span>
             </button>
