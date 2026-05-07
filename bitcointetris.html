@@ -195,13 +195,22 @@ body {
   position: fixed; top: 20px; right: 20px;
   display: flex; flex-direction: column; gap: 8px; z-index: 9999;
 }
+@media (max-width: 768px) {
+  .toast-wrap {
+    top: max(50px, calc(env(safe-area-inset-top) + 16px));
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    align-items: center;
+  }
+}
 .toast {
   background: var(--ink); color: white; border-radius: 10px;
   padding: 8px 16px; font-weight: 800; font-size: 13px;
   box-shadow: 0 4px 12px rgba(0,0,0,.3);
   animation: slideIn .3s ease;
 }
-@keyframes slideIn { from { transform: translateX(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes slideIn { from { margin-top: -20px; opacity: 0; } to { margin-top: 0; opacity: 1; } }
 
 /* ===================================================
    MAIN MENU
@@ -747,7 +756,7 @@ body {
 .verify-screen {
   position: relative; z-index: 1;
   min-height: 100dvh; background: var(--green-dark);
-  padding: 24px 16px;
+  padding: max(24px, env(safe-area-inset-top)) 16px 24px;
 }
 .ticket {
   background: linear-gradient(135deg, #1a2e1a, #0f1f0f);
@@ -780,6 +789,66 @@ body {
   border: 3px solid var(--green-bright); color: var(--green-bright);
   padding: 4px 10px; border-radius: 6px; font-weight: 900; letter-spacing: 1px;
   font-size: 14px;
+}
+
+.ticket-reveal-wrap { position: relative; }
+.reveal.scratching {
+  color: transparent !important;
+  pointer-events: none;
+  overflow: hidden;
+}
+.reveal.scratching::after {
+  content: "🪙";
+  position: absolute;
+  top: 50%; left: 50%;
+  margin-top: -12px; margin-left: -12px;
+  font-size: 24px;
+  color: initial;
+  animation: scratchMove 1.5s ease-in-out forwards;
+}
+@keyframes scratchMove {
+  0% { left: 10%; transform: rotate(0); }
+  20% { left: 80%; transform: rotate(45deg); }
+  40% { left: 20%; transform: rotate(-45deg); }
+  60% { left: 90%; transform: rotate(60deg); }
+  80% { left: 30%; transform: rotate(-30deg); }
+  100% { left: 50%; transform: rotate(0) scale(0); opacity: 0; }
+}
+.dust-particle {
+  position: absolute;
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: dustFly 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes dustFly {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+}
+
+.explosion-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  background: rgba(0,0,0,0.8);
+  animation: fadeOverlay 2.5s forwards;
+}
+@keyframes fadeOverlay {
+  0%, 80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.explosion-text {
+  font-size: clamp(60px, 15vw, 120px); font-weight: 900; color: #7be495;
+  text-shadow: 0 0 40px rgba(123,228,149,0.8), 0 10px 0 var(--green-deep);
+  animation: explodeText 2.5s forwards cubic-bezier(0.1, 1.5, 0.5, 1);
+}
+@keyframes explodeText {
+  0% { transform: scale(0); opacity: 0; }
+  15% { transform: scale(1.2); opacity: 1; }
+  20% { transform: scale(1); opacity: 1; }
+  80% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
 }
 
 /* ===================================================
@@ -2038,39 +2107,95 @@ function VerifyMode({ stats, onBack, onPlayAgain }) {
 }
 
 function TicketCard({ ticket, onVerify }) {
+  const [anim, setAnim] = useState(ticket.verified ? "done" : "idle");
+  const [dust, setDust] = useState([]);
+
+  useEffect(() => {
+    if (ticket.verified && anim === "idle") {
+      setAnim("exploding");
+      setTimeout(() => setAnim("done"), 2500);
+    }
+  }, [ticket.verified, anim]);
+
+  const handleReveal = () => {
+    if (anim !== "idle") return;
+    setAnim("scratching");
+    
+    const newDust = Array.from({length: 40}).map((_, i) => {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 20 + Math.random() * 100;
+      return {
+        id: i,
+        dx: Math.cos(angle) * dist + "px",
+        dy: Math.sin(angle) * dist + "px",
+        left: 10 + Math.random() * 80 + "%",
+        top: 10 + Math.random() * 80 + "%",
+        delay: Math.random() * 1.3 + "s"
+      };
+    });
+    setDust(newDust);
+
+    setTimeout(() => {
+      onVerify();
+      setAnim("exploding");
+      setTimeout(() => setAnim("done"), 2500);
+    }, 1500);
+  };
+
+  const showReveal = !ticket.verified || anim === "scratching";
+
   return (
-    <div className={"ticket" + (ticket.verified ? " verified" : "")}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-        <strong style={{ fontSize: 13 }}>Ticket #{String(ticket.number).padStart(3, "0")}</strong>
-        <span style={{ fontSize: 11, color: "rgba(255,255,255,.5)" }}>
-          {ticket.mode}-word{ticket.emergency ? " · emergency" : ""}
-        </span>
-      </div>
-      <div className="barcode" />
-      <div style={{ fontSize: 11, color: "rgba(255,255,255,.4)", marginBottom: 8 }}>
-        Educational gameplay phrase — checksum not validated
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 3, marginBottom: 10 }}>
-        {ticket.words.map((w, i) => (
-          <div key={i} className="word-chip">
-            <span className="num">{String(i + 1).padStart(2, "0")}</span>{w}
+    <>
+      <div className={"ticket" + (ticket.verified ? " verified" : "")}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+          <strong style={{ fontSize: 13 }}>Ticket #{String(ticket.number).padStart(3, "0")}</strong>
+          <span style={{ fontSize: 11, color: "rgba(255,255,255,.5)" }}>
+            {ticket.mode}-word{ticket.emergency ? " · emergency" : ""}
+          </span>
+        </div>
+        <div className="barcode" />
+        <div style={{ fontSize: 11, color: "rgba(255,255,255,.4)", marginBottom: 8 }}>
+          Educational gameplay phrase — checksum not validated
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 3, marginBottom: 10 }}>
+          {ticket.words.map((w, i) => (
+            <div key={i} className="word-chip">
+              <span className="num">{String(i + 1).padStart(2, "0")}</span>{w}
+            </div>
+          ))}
+        </div>
+        {showReveal ? (
+          <div className="ticket-reveal-wrap">
+            <div className={"reveal" + (anim === "scratching" ? " scratching" : "")} onClick={handleReveal}>
+              🪙 don't trust, verify
+            </div>
+            {anim === "scratching" && dust.map(d => (
+              <div key={d.id} className="dust-particle" style={{
+                left: d.left, top: d.top, 
+                "--dx": d.dx, "--dy": d.dy,
+                animationDelay: d.delay
+              }} />
+            ))}
           </div>
-        ))}
+        ) : (
+          <div className="verified-panel">
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,.6)", marginBottom: 4 }}>Generated address (demo):</div>
+            <code style={{ fontSize: 10, wordBreak: "break-all", color: "#7be495" }}>{ticket.generatedAddress}</code>
+            <div style={{ marginTop: 8, fontSize: 14, fontWeight: 900, color: "#7be495" }}>✓ Verified balance: 0 BTC</div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,.5)" }}>Target match: NO — 0 BTC, as expected.</div>
+          </div>
+        )}
+        <div style={{ fontSize: 10, color: "rgba(255,255,255,.3)", marginTop: 8 }}>
+          ⚠ Demo phrase. Never use for real funds.
+        </div>
       </div>
-      {!ticket.verified ? (
-        <div className="reveal" onClick={onVerify}>🪙 don't trust, verify</div>
-      ) : (
-        <div className="verified-panel">
-          <div style={{ fontSize: 11, color: "rgba(255,255,255,.6)", marginBottom: 4 }}>Generated address (demo):</div>
-          <code style={{ fontSize: 10, wordBreak: "break-all", color: "#7be495" }}>{ticket.generatedAddress}</code>
-          <div style={{ marginTop: 8, fontSize: 14, fontWeight: 900, color: "#7be495" }}>✓ Verified balance: 0 BTC</div>
-          <div style={{ fontSize: 11, color: "rgba(255,255,255,.5)" }}>Target match: NO — 0 BTC, as expected.</div>
+
+      {anim === "exploding" && (
+        <div className="explosion-overlay">
+          <div className="explosion-text">0 BTC</div>
         </div>
       )}
-      <div style={{ fontSize: 10, color: "rgba(255,255,255,.3)", marginTop: 8 }}>
-        ⚠ Demo phrase. Never use for real funds.
-      </div>
-    </div>
+    </>
   );
 }
 
