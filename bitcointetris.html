@@ -1214,19 +1214,25 @@ function ToastHost({ toasts }) {
 // ============================================================
 function AdSlot({ slotId = "auto", format = "auto", style = {} }) {
   const ref = React.useRef(null);
+  const loaded = React.useRef(false);
+
   React.useEffect(() => {
     try {
-      if (window.__ADS_CLIENT && ref.current) {
+      if (window.__ADS_CLIENT && ref.current && !loaded.current) {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
+        loaded.current = true;
       }
     } catch(e) {}
   }, []);
+
   if (!window.__ADS_CLIENT) return null;
+
   return (
-    <div style={{ textAlign: "center", margin: "8px 0", ...style }}>
+    <div style={{ textAlign: "center", margin: "16px auto", minHeight: 90, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.5)", border: "2px dashed var(--ink)", position: "relative", ...style }}>
+      <span style={{ position: "absolute", fontSize: 12, fontWeight: 900, color: "var(--ink)", opacity: 0.5, pointerEvents: "none", textTransform: "uppercase", letterSpacing: 1 }}>Advertisement</span>
       <ins ref={ref}
         className="adsbygoogle"
-        style={{ display: "block" }}
+        style={{ display: "block", width: "100%", zIndex: 1 }}
         data-ad-client={window.__ADS_CLIENT}
         data-ad-slot={slotId}
         data-ad-format={format}
