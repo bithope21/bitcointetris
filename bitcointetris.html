@@ -75,6 +75,9 @@ body {
     var(--green-deep) 65%,
     var(--green-dark) 100%
   );
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: var(--green-dark);
   position: relative;
   overflow-x: hidden;
 }
@@ -863,7 +866,7 @@ body {
   /* Safety badge: top-left corner, above the screen */
   .safety-badge {
     bottom: auto;
-    top: 4px;
+    top: max(44px, calc(env(safe-area-inset-top) + 8px));
     left: 8px;
     font-size: 9px;
     padding: 3px 7px;
@@ -1903,16 +1906,17 @@ function GameShell({ config, onGameOver, pushToast }) {
         {/* Right: action buttons */}
         <div className="action-col">
           <button className="action-btn action-btn-drop"
+            style={{ marginBottom: "8px" }}
             onTouchStart={e => { e.preventDefault(); hardDrop(); }}>
             ⬇ DROP
           </button>
-          <div style={{ display: "flex", gap: 10 }}>
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
             <button className="action-btn action-btn-b"
+              style={{ marginTop: "24px" }}
               onTouchStart={e => { e.preventDefault(); softDrop(); }}>
               B<br /><span className="action-lbl">DOWN</span>
             </button>
             <button className="action-btn action-btn-a"
-              style={{ marginTop: "-20px" }}
               onTouchStart={e => { e.preventDefault(); rotate(); }}>
               A<br /><span className="action-lbl">TURN</span>
             </button>
