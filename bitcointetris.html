@@ -555,8 +555,8 @@ body {
   padding: 6px 5px;
   min-width: 82px;
   max-width: 88px;
-  background: rgba(0,0,0,.4);
-  border-left: 1px solid rgba(255,255,255,.1);
+  background: #111;
+  border-left: 3px solid var(--ink);
   overflow: hidden;
 }
 .msb-section { flex: 0 0 auto; }
@@ -570,36 +570,34 @@ body {
 .device-mid {
   display: none;
   flex: 0 0 auto;
-  background: rgba(255,255,255,.04);
-  border-top: 1px solid rgba(255,255,255,.08);
-  border-bottom: 1px solid rgba(255,255,255,.08);
-  padding: 5px 16px;
+  background: transparent;
+  padding: 12px 16px;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
 }
 .device-mid-btn {
-  background: rgba(255,255,255,.12);
-  border: 1.5px solid rgba(255,255,255,.25);
+  background: white;
+  border: 3px solid var(--ink);
   border-radius: 6px;
-  color: rgba(255,255,255,.9);
+  color: var(--ink);
   font-size: 10px; font-weight: 900; font-family: "Baloo 2", sans-serif;
-  padding: 4px 10px; cursor: pointer; letter-spacing: .5px;
-  box-shadow: 0 2px 0 rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.15);
+  padding: 4px 12px; cursor: pointer; letter-spacing: .5px;
+  box-shadow: 0 3px 0 var(--ink);
   touch-action: manipulation;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
-.device-mid-btn:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,.3); }
+.device-mid-btn:active { transform: translateY(3px); box-shadow: 0 0 0 var(--ink); }
 .device-mid-btn.end-btn {
-  background: linear-gradient(180deg, #e53935, #b71c1c);
-  border-color: #7f0000; color: white;
-  box-shadow: 0 2px 0 #7f0000, inset 0 1px 0 rgba(255,255,255,.2);
+  background: #ff4747;
+  color: white;
 }
 .device-mid-logo {
-  font-size: 11px; font-weight: 900; color: rgba(255,215,0,.5);
-  letter-spacing: 1.5px; user-select: none;
+  font-size: 14px; font-weight: 900; color: var(--ink);
+  letter-spacing: 2px; user-select: none;
 }
 
 /* ===================================================
@@ -619,26 +617,27 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 50px);
   grid-template-rows: repeat(3, 50px);
-  gap: 3px;
+  gap: 4px;
 }
 .dpad-btn {
-  background: linear-gradient(160deg, #3a53d8, #2433a8);
-  border: 2px solid #152060;
-  border-radius: 10px;
-  color: white; font-size: 18px; font-weight: 900;
+  background: #3a53d8;
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  color: white; font-size: 20px; font-weight: 900;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 0 #0d1245, inset 0 1px 0 rgba(255,255,255,.3);
+  box-shadow: 0 5px 0 var(--ink);
   touch-action: manipulation;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
-.dpad-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #0d1245; }
+.dpad-btn:active { transform: translateY(5px); box-shadow: 0 0 0 var(--ink); }
 .dpad-center {
-  background: #1a2258;
-  border-radius: 50%;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,.5);
+  background: var(--ink);
+  border-radius: 6px;
+  box-shadow: none;
   pointer-events: none;
 }
 .dpad-corner { background: transparent; pointer-events: none; }
@@ -651,60 +650,56 @@ body {
   gap: 10px;
 }
 .action-btn {
-  width: 58px; height: 58px;
+  width: 62px; height: 62px;
   border-radius: 50%;
-  font-size: 13px; font-weight: 900; color: white; line-height: 1.1; text-align: center;
+  font-size: 14px; font-weight: 900; color: white; line-height: 1.1; text-align: center;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
-  border: 2px solid transparent;
+  border: 3px solid var(--ink);
+  transition: transform 0.1s, box-shadow 0.1s;
 }
-.action-btn:active { transform: translateY(3px); }
+.action-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--ink) !important; }
 .action-btn-a {
-  background: linear-gradient(180deg, #d05820, #902808);
-  border-color: #601808;
-  box-shadow: 0 5px 0 #481008, inset 0 1px 0 rgba(255,255,255,.25);
+  background: #ff5722;
+  box-shadow: 0 6px 0 var(--ink);
 }
-.action-btn-a:active { box-shadow: 0 2px 0 #481008; }
 .action-btn-b {
-  background: linear-gradient(180deg, #e03030, #a01010);
-  border-color: #700808;
-  box-shadow: 0 5px 0 #500808, inset 0 1px 0 rgba(255,255,255,.25);
+  background: #e53935;
+  box-shadow: 0 6px 0 var(--ink);
 }
-.action-btn-b:active { box-shadow: 0 2px 0 #500808; }
 .action-btn-drop {
-  width: 58px; height: 36px; border-radius: 10px;
-  background: linear-gradient(180deg, #2d8f2d, #1a551a);
-  border-color: #0d3a0d;
-  box-shadow: 0 4px 0 #0a2a0a, inset 0 1px 0 rgba(255,255,255,.2);
-  font-size: 10px;
+  width: 64px; height: 40px; border-radius: 10px;
+  background: #4caf50;
+  box-shadow: 0 5px 0 var(--ink);
+  font-size: 11px;
 }
-.action-btn-drop:active { box-shadow: 0 1px 0 #0a2a0a; }
-.action-lbl { font-size: 7px; opacity: .8; }
+.action-lbl { font-size: 8px; color: var(--ink); font-weight: 900; background: rgba(255,255,255,0.8); padding: 0 4px; border-radius: 4px; margin-top: 2px; }
 
 /* Device footer decoration (mobile only) */
 .device-footer {
   display: none;
   flex: 0 0 auto;
-  padding: 6px 20px 10px;
+  padding: 6px 20px 14px;
   align-items: center;
   justify-content: space-between;
 }
 .device-speaker {
   display: flex;
-  gap: 4px;
+  gap: 5px;
   align-items: center;
 }
 .speaker-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: rgba(255,255,255,.15);
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ink);
+  opacity: 0.8;
 }
 .device-brand {
-  font-size: 9px; font-weight: 900; color: rgba(255,215,0,.3);
-  letter-spacing: 2px; user-select: none;
+  font-size: 10px; font-weight: 900; color: var(--ink);
+  letter-spacing: 3px; user-select: none; opacity: 0.8;
 }
 
 /* ===================================================
@@ -828,7 +823,7 @@ body {
 @media (max-width: 768px) {
   .game-left, .game-right { display: none !important; }
   /* Device shell */
-  .game-shell { background: #18182a; }
+  .game-shell { background: #ffed87; }
   /* Hide desktop HUD — device-mid has PAUSE/END */
   .game-hud { display: none !important; }
   /* Screen frame */
@@ -839,8 +834,9 @@ body {
     justify-content: center;
     margin: max(8px, env(safe-area-inset-top)) 10px 0;
     background: #060e06;
-    border: 3px solid #3a3a3a;
+    border: 4px solid var(--ink);
     border-radius: 8px;
+    box-shadow: 0 8px 0 var(--ink);
     overflow: hidden;
     height: 56dvh;
     gap: 0;
@@ -1935,7 +1931,6 @@ function GameShell({ config, onGameOver, pushToast }) {
         </div>
       </div>
 
-      <SafetyBadge />
     </div>
   );
 }
