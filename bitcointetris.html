@@ -2212,7 +2212,7 @@ function VerifyMode({ stats, onBack, onPlayAgain }) {
           <button className="btn-brutal primary" style={{ padding: "8px 16px" }} onClick={onPlayAgain}>▶ Play Again</button>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(300px,1fr))", gap: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%, 280px),1fr))", gap: 12 }}>
           {tickets.length === 0 && (
             <div className="stat-block" style={{ gridColumn: "1 / -1", textAlign: "center" }}>No tickets collected. Play a round first!</div>
           )}
