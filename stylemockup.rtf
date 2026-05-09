@@ -1,0 +1,296 @@
+{\rtf1\ansi\ansicpg874\cocoartf2867
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 :root \{\
+  /* Colors from brand-spec.md (OKLch equivalents) */\
+  --bg-sky: oklch(68% 0.18 240);\
+  --bg-sky-light: oklch(75% 0.15 240);\
+  --grass-green: oklch(74% 0.22 145);\
+  --grass-green-light: oklch(82% 0.20 140);\
+  --deep-green: oklch(45% 0.15 150);\
+  --palm-fruit: oklch(65% 0.22 45);\
+  --palm-fruit-dark: oklch(55% 0.22 35);\
+  --soil: oklch(45% 0.12 60);\
+  --card-bg: oklch(98% 0.02 85);\
+  --highlight: oklch(88% 0.20 90);\
+  --text: oklch(25% 0.03 250);\
+  --text-muted: oklch(50% 0.02 250);\
+  --white: oklch(100% 0 0);\
+  \
+  /* Radii & Shadows */\
+  --radius-xl: 1rem;\
+  --radius-2xl: 1.5rem;\
+  --radius-3xl: 2rem;\
+  --shadow-soft: 0 10px 25px -5px oklch(0% 0 0 / 0.1), 0 8px 10px -6px oklch(0% 0 0 / 0.1);\
+  --shadow-game: 0 4px 0 oklch(0% 0 0 / 0.15);\
+  --shadow-btn: 0 4px 0 oklch(0% 0 0 / 0.2);\
+  \
+  /* Fonts */\
+  --font-display: 'IBM Plex Sans Thai Looped', 'Noto Sans Thai', system-ui, -apple-system, sans-serif;\
+  --font-body: 'IBM Plex Sans Thai', 'Noto Sans Thai', system-ui, -apple-system, sans-serif;\
+\}\
+\
+* \{\
+  box-sizing: border-box;\
+  margin: 0;\
+  padding: 0;\
+\}\
+\
+body \{\
+  font-family: var(--font-body);\
+  background: var(--bg-sky);\
+  color: var(--text);\
+  line-height: 1.5;\
+  min-height: 100vh;\
+  overflow-x: hidden;\
+\}\
+\
+h1, h2, h3, .font-display \{\
+  font-family: var(--font-display);\
+  font-weight: 700;\
+\}\
+\
+/* --- Game Background Scene --- */\
+.scene-container \{\
+  position: fixed;\
+  top: 0;\
+  left: 0;\
+  width: 100%;\
+  height: 100vh;\
+  z-index: -1;\
+  background: linear-gradient(to bottom, var(--bg-sky), var(--bg-sky-light));\
+  overflow: hidden;\
+\}\
+\
+.cloud \{\
+  position: absolute;\
+  background: var(--white);\
+  border-radius: 50px;\
+  opacity: 0.8;\
+  animation: float 20s linear infinite;\
+\}\
+\
+.cloud::before, .cloud::after \{\
+  content: '';\
+  position: absolute;\
+  background: var(--white);\
+  border-radius: 50%;\
+\}\
+\
+@keyframes float \{\
+  from \{ transform: translateX(-200px); \}\
+  to \{ transform: translateX(100vw); \}\
+\}\
+\
+.hills \{\
+  position: absolute;\
+  bottom: 0;\
+  left: 0;\
+  width: 100%;\
+  height: 300px;\
+  z-index: -1;\
+\}\
+\
+.hill \{\
+  position: absolute;\
+  bottom: -50px;\
+  width: 120%;\
+  left: -10%;\
+  height: 300px;\
+  border-radius: 50% 50% 0 0;\
+\}\
+\
+.hill-back \{\
+  background: var(--grass-green-light);\
+  height: 250px;\
+  opacity: 0.6;\
+  transform: translateX(-5%);\
+  animation: sway 10s ease-in-out infinite alternate;\
+\}\
+\
+.hill-front \{\
+  background: var(--grass-green);\
+  height: 180px;\
+  transform: translateX(5%);\
+  animation: sway 8s ease-in-out infinite alternate-reverse;\
+\}\
+\
+@keyframes sway \{\
+  from \{ transform: translateX(-2%); \}\
+  to \{ transform: translateX(2%); \}\
+\}\
+\
+/* --- Main Layout --- */\
+.app-container \{\
+  max-width: 1200px;\
+  margin: 0 auto;\
+  padding: 2rem 1rem 8rem;\
+  position: relative;\
+  z-index: 1;\
+\}\
+\
+.dashboard-header \{\
+  margin-bottom: 2rem;\
+  text-align: center;\
+  color: var(--white);\
+  text-shadow: 0 2px 4px oklch(0% 0 0 / 0.2);\
+\}\
+\
+.dashboard-header h1 \{\
+  font-size: 2.5rem;\
+  margin-bottom: 0.5rem;\
+\}\
+\
+/* --- Components --- */\
+.card \{\
+  background: var(--card-bg);\
+  border-radius: var(--radius-2xl);\
+  padding: 1.5rem;\
+  box-shadow: var(--shadow-soft), var(--shadow-game);\
+  border: 4px solid var(--white);\
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;\
+\}\
+\
+.card:hover \{\
+  transform: translateY(-8px) scale(1.02);\
+  box-shadow: 0 15px 30px -5px oklch(0% 0 0 / 0.15), 0 8px 4px oklch(0% 0 0 / 0.05);\
+\}\
+\
+.btn \{\
+  display: inline-flex;\
+  align-items: center;\
+  justify-content: center;\
+  padding: 0.75rem 1.5rem;\
+  border-radius: var(--radius-xl);\
+  font-weight: 700;\
+  cursor: pointer;\
+  border: none;\
+  box-shadow: var(--shadow-btn);\
+  transition: transform 0.1s, box-shadow 0.1s;\
+  font-family: var(--font-display);\
+  border-bottom: 4px solid oklch(0% 0 0 / 0.2);\
+\}\
+\
+.btn:hover \{\
+  transform: translateY(-2px);\
+  filter: brightness(1.05);\
+\}\
+\
+.btn:active \{\
+  transform: translateY(2px);\
+  box-shadow: 0 2px 0 oklch(0% 0 0 / 0.2);\
+  border-bottom-width: 2px;\
+\}\
+\
+.btn-primary \{\
+  background: var(--palm-fruit);\
+  color: var(--white);\
+\}\
+\
+.btn-success \{\
+  background: var(--grass-green);\
+  color: var(--white);\
+\}\
+\
+/* --- Navigation --- */\
+.bottom-nav \{\
+  position: fixed;\
+  bottom: 1.5rem;\
+  left: 50%;\
+  transform: translateX(-50%);\
+  background: var(--white);\
+  padding: 0.75rem;\
+  border-radius: var(--radius-3xl);\
+  display: flex;\
+  gap: 1rem;\
+  box-shadow: var(--shadow-soft);\
+  z-index: 100;\
+\}\
+\
+.nav-item \{\
+  width: 50px;\
+  height: 50px;\
+  display: flex;\
+  align-items: center;\
+  justify-content: center;\
+  border-radius: 50%;\
+  color: var(--text-muted);\
+  text-decoration: none;\
+  transition: all 0.2s;\
+\}\
+\
+.nav-item.active \{\
+  background: var(--highlight);\
+  color: var(--text);\
+  transform: scale(1.1);\
+\}\
+\
+/* --- Floating Animation for Mascot/Icons --- */\
+.floating \{\
+  animation: floating 3s ease-in-out infinite;\
+\}\
+\
+@keyframes floating \{\
+  0% \{ transform: translateY(0px); \}\
+  50% \{ transform: translateY(-10px); \}\
+  100% \{ transform: translateY(0px); \}\
+\}\
+\
+/* --- Sections --- */\
+.grid \{\
+  display: grid;\
+  gap: 1.5rem;\
+\}\
+\
+.grid-cols-1 \{ grid-template-columns: 1fr; \}\
+@media (min-width: 768px) \{\
+  .grid-cols-2 \{ grid-template-columns: repeat(2, 1fr); \}\
+  .grid-cols-3 \{ grid-template-columns: repeat(3, 1fr); \}\
+  .grid-cols-4 \{ grid-template-columns: repeat(4, 1fr); \}\
+\}\
+\
+/* --- Mascot Card --- */\
+.mascot-card \{\
+  display: flex;\
+  gap: 1.5rem;\
+  align-items: center;\
+  background: var(--highlight);\
+  border-color: var(--white);\
+\}\
+\
+.mascot-avatar \{\
+  width: 80px;\
+  height: 80px;\
+  background: var(--white);\
+  border-radius: 50%;\
+  flex-shrink: 0;\
+  display: flex;\
+  align-items: center;\
+  justify-content: center;\
+  font-size: 2rem;\
+  border: 4px solid var(--palm-fruit);\
+\}\
+\
+.mascot-bubble \{\
+  position: relative;\
+  background: var(--white);\
+  padding: 1rem;\
+  border-radius: var(--radius-xl);\
+  font-weight: 600;\
+\}\
+\
+.mascot-bubble::before \{\
+  content: '';\
+  position: absolute;\
+  left: -10px;\
+  top: 50%;\
+  transform: translateY(-50%);\
+  border-top: 10px solid transparent;\
+  border-bottom: 10px solid transparent;\
+  border-right: 10px solid var(--white);\
+\}\
+}
