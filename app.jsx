@@ -312,7 +312,7 @@ function NextPreview({ piece }) {
 }
 
 // ---------- Game Over + Verify ----------
-function GameOverScreen({ result, onPlayAgain, onNewPlayer, onVerify }) {
+function GameOverScreen({ result, onPlayAgain, onHome, onVerify }) {
   return (
     <div style={{ maxWidth: 900, margin: "0 auto", padding: 16 }}>
       <div className="panel" style={{ textAlign: "center" }}>
@@ -332,7 +332,7 @@ function GameOverScreen({ result, onPlayAgain, onNewPlayer, onVerify }) {
         <div className="row" style={{ justifyContent: "center", flexWrap: "wrap" }}>
           <button className="btn btn-btc" onClick={onVerify}>🔍 Enter Verify Mode</button>
           <button className="btn" onClick={onPlayAgain}>🔁 Play Again</button>
-          <button className="btn" onClick={onNewPlayer}>👤 New Player</button>
+          <button className="btn" onClick={onHome}>🏠 Home</button>
         </div>
       </div>
       <div style={{ marginTop: 16 }}><AdSlot position="post" /></div>
@@ -585,7 +585,7 @@ function App() {
   };
 
   const onPlayAgain = () => { setPhase("setup"); setGameStatus("setup"); setResult(null); };
-  const onNewPlayer = () => { setPhase("setup"); setGameStatus("setup"); setResult(null); };
+  const onHome = () => { setPage("Play"); setPhase("lobby"); setGameStatus("setup"); setResult(null); };
 
   // Page nav: if user clicks nav while playing, just show static page (game state preserved)
   const showStatic = page !== "Play";
@@ -606,7 +606,7 @@ function App() {
           )}
           {phase === "gameOver" && result && (
             <GameOverScreen result={result}
-              onPlayAgain={onPlayAgain} onNewPlayer={onNewPlayer}
+              onPlayAgain={onPlayAgain} onHome={onHome}
               onVerify={() => setPhase("verify")} />
           )}
           {phase === "verify" && result && (

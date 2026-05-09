@@ -860,6 +860,29 @@ body {
   text-align: center; display: flex; flex-direction: column; gap: 12px;
   animation: introZoom .3s cubic-bezier(.34,1.56,.64,1) forwards;
 }
+.bitret-help-card {
+  background: var(--palm-fruit);
+  color: var(--white);
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 0 oklch(0% 0 0 / 0.15);
+  margin-top: 8px;
+}
+.bitret-help-card img {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+}
+.bitret-help-card span {
+  min-width: 0;
+}
 .vocab-close {
   position: absolute; top: 12px; right: 12px; z-index: 10;
   width: 36px; height: 36px; border-radius: 50%;
@@ -957,6 +980,39 @@ body {
   padding: 20px; max-width: 440px; width: 100%;
   box-shadow: 0 8px 0 rgba(0,0,0,.4), 0 20px 40px rgba(0,0,0,.5);
   color: white;
+}
+
+@media (max-width: 480px) {
+  .vocab-overlay {
+    align-items: stretch;
+    padding: 10px;
+  }
+  .vocab-modal {
+    max-width: none;
+    max-height: calc(100dvh - 20px);
+    padding: 16px;
+    gap: 10px;
+  }
+  .vocab-img {
+    max-height: 32dvh;
+  }
+  .bitret-help-card {
+    justify-content: flex-start;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.2;
+    padding: 10px 44px 10px 10px;
+  }
+  .bitret-help-card img {
+    width: 28px;
+    height: 28px;
+  }
+  .vocab-modal .btn-brutal {
+    width: 100%;
+    min-height: 44px;
+    white-space: normal;
+    line-height: 1.2;
+  }
 }
 
 /* ===================================================
@@ -2107,7 +2163,7 @@ function GameShell({ config, onGameOver, pushToast }) {
 // ============================================================
 // GAME OVER SCREEN
 // ============================================================
-function GameOverScreen({ stats, onPlayAgain, onVerify, onShare }) {
+function GameOverScreen({ stats, onPlayAgain, onHome, onVerify, onShare }) {
   const [showShareCard, setShowShareCard] = useState(false);
   return (
     <div className="gameover-screen">
@@ -2140,6 +2196,7 @@ function GameOverScreen({ stats, onPlayAgain, onVerify, onShare }) {
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
         <button className="btn-brutal primary" onClick={onVerify}>🔍 Verify Tickets</button>
         <button className="btn-brutal yellow" onClick={onPlayAgain}>▶ Play Again</button>
+        <button className="btn-brutal" onClick={onHome}>🏠 Home</button>
         <button className="btn-brutal" onClick={() => setShowShareCard(true)}>📤 Share</button>
       </div>
       {showShareCard && <ShareModal stats={stats} onClose={() => setShowShareCard(false)} />}
@@ -2246,8 +2303,8 @@ function VocabModal({ word, onClose }) {
         <button className="vocab-close" onClick={onClose}>✕</button>
         
         {isIncomplete && (
-          <div style={{ background: "var(--palm-fruit)", color: "var(--white)", padding: "12px", borderRadius: "12px", fontWeight: "900", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: "0 4px 0 oklch(0% 0 0 / 0.15)", marginTop: 8 }}>
-            <img src="./public/logo.svg" alt="Bitret Logo" style={{ width: 32, height: 32, filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.3))" }} />
+          <div className="bitret-help-card">
+            <img src="./public/logo.svg" alt="Bitret Logo" />
             <span>Help Bitret Verify!</span>
           </div>
         )}
@@ -2547,6 +2604,11 @@ function App() {
 
   const handlePlayAgain = () => {
     setGameStats(null);
+    setPhase("intro");
+  };
+
+  const handleHome = () => {
+    setGameStats(null);
     setPhase("menu");
   };
 
@@ -2580,6 +2642,7 @@ function App() {
         <GameOverScreen
           stats={gameStats}
           onPlayAgain={handlePlayAgain}
+          onHome={handleHome}
           onVerify={() => setPhase("verify")}
         />
       )}
