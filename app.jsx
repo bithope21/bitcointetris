@@ -584,7 +584,7 @@ function App() {
     setGameStatus("gameOver");
   };
 
-  const onPlayAgain = () => { setPhase("setup"); setGameStatus("setup"); setResult(null); };
+  const onPlayAgain = () => { setPhase("playing"); setGameStatus("playing"); setResult(null); };
   const onHome = () => { setPage("Play"); setPhase("lobby"); setGameStatus("setup"); setResult(null); };
 
   // Page nav: if user clicks nav while playing, just show static page (game state preserved)

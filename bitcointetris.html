@@ -984,17 +984,21 @@ body {
 
 @media (max-width: 480px) {
   .vocab-overlay {
-    align-items: stretch;
-    padding: 10px;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
   }
   .vocab-modal {
-    max-width: none;
-    max-height: calc(100dvh - 20px);
+    width: min(calc(100vw - 24px), calc(100dvh - 24px), 380px);
+    height: min(calc(100vw - 24px), calc(100dvh - 24px), 380px);
+    max-width: 380px;
+    max-height: 380px;
+    aspect-ratio: 1 / 1;
     padding: 16px;
     gap: 10px;
   }
   .vocab-img {
-    max-height: 32dvh;
+    max-height: 28%;
   }
   .bitret-help-card {
     justify-content: flex-start;
@@ -2299,7 +2303,7 @@ function VocabModal({ word, onClose }) {
 
   return (
     <div className="vocab-overlay" onClick={onClose}>
-      <div className="vocab-modal" onClick={e => e.stopPropagation()} style={{ maxHeight: "95vh" }}>
+      <div className="vocab-modal" onClick={e => e.stopPropagation()}>
         <button className="vocab-close" onClick={onClose}>✕</button>
         
         {isIncomplete && (
@@ -2604,7 +2608,7 @@ function App() {
 
   const handlePlayAgain = () => {
     setGameStats(null);
-    setPhase("intro");
+    setPhase("playing");
   };
 
   const handleHome = () => {
