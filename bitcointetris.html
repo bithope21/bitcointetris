@@ -2148,26 +2148,160 @@ function GameOverScreen({ stats, onPlayAgain, onVerify, onShare }) {
 }
 
 // ============================================================
-// VOCAB MODAL
+// VOCAB MODAL & CROWDSOURCING
 // ============================================================
+const getImagenPrompt = (word, meaning) => `ฉันต้องการสร้างภาพประกอบคำศัพท์ BIP-39 สำหรับเด็กและผู้เริ่มเรียนรู้ภาษาอังกฤษ
+เป้าหมาย:
+สร้างภาพประกอบแบบ flashcard สำหรับคำศัพท์ 4 ตัวอักษรจาก BIP-39 wordlist เพื่อใช้ทำฐานข้อมูลการเรียนรู้คำศัพท์
+
+สไตล์ภาพที่ต้องการ:
+* ภาพเดี่ยว 1 คำต่อ 1 รูป
+* ขนาดสี่เหลี่ยมจัตุรัส 1:1
+* พื้นหลังสีขาวหรือ off-white สะอาด
+* ภาพวาดการ์ตูน 2D / soft vector illustration
+* โทนสดใส เป็นมิตรกับเด็ก
+* เส้นขอบนุ่ม สะอาด ไม่รก
+* แสงเงานุ่ม ๆ คล้าย educational flashcard
+* วัตถุหลักอยู่กึ่งกลางภาพ
+* มีคำศัพท์ภาษาอังกฤษตัวพิมพ์เล็กอยู่ด้านล่างภาพ
+* ฟอนต์ควรดูมน อ่านง่าย สีกรมท่าหรือสีเข้ม
+* หลีกเลี่ยงภาพเหมือนจริง ภาพซับซ้อน หรือฉากหลังเยอะ
+* หลีกเลี่ยงการทำเป็นตารางรวมหลายคำ
+* ห้ามรวมหลายคำในภาพเดียว
+* ห้ามใส่คำแปลภาษาไทยในภาพ
+* ห้ามใส่หัวตาราง คอลัมน์ หรือ layout แบบ spreadsheet
+
+ตัวอย่าง tone ที่ต้องการ:
+ภาพคำว่า able = เด็กยิ้มยกนิ้วโป้ง พร้อมคำว่า “able” ด้านล่าง
+
+คำสั่งสำคัญ:
+ให้สร้างภาพแยกทีละคำเท่านั้น ไม่ใช่ infographic ไม่ใช่ตาราง ไม่ใช่ collage
+
+รายการคำที่จะสร้างใน batch = ${word}
+และ concept ภาพ จะแนบมา = ${meaning ? meaning : "ให้ AI คิดคอนเซปต์สั้นๆ ที่เหมาะสมกับคำ"}
+Output ที่ต้องการ:
+สร้างภาพ flashcard เดี่ยว 1 รูปต่อ 1 คำ ตาม style เดียวกันทั้งหมด
+ขนาด 1024x1024 px ตั้งชื่อตาม word นั้นๆ เช่น ${word}.png`;
+
 function VocabModal({ word, onClose }) {
-  const trans = (window.BIP39_THAI && window.BIP39_THAI[word.toLowerCase()]) || "คำศัพท์ทั่วไป";
+  const defaultMeaning = window.BIP39_THAI && window.BIP39_THAI[word.toLowerCase()];
+  const displayMeaning = defaultMeaning || "คำศัพท์ทั่วไป";
   const [imgSrc, setImgSrc] = useState(`./bip39-image/${word.toLowerCase()}.png`);
   const [hasError, setHasError] = useState(false);
+  
+  // Crowdsourcing state
+  const [customMeaning, setCustomMeaning] = useState(defaultMeaning || "");
+  const [imageBase64, setImageBase64] = useState("");
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxmm0qBxxSCHQ7Wb8QQOzQ_AZOFmOX2rOyUXzJsj9VyMlliD_SDh_8KRyOS_ItzhnxD/exec";
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState("");
+
+  const isIncomplete = hasError || !defaultMeaning;
+
+  const handleCopyPrompt = () => {
+    navigator.clipboard.writeText(getImagenPrompt(word, customMeaning));
+    alert("Copied prompt to clipboard!");
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => setImageBase64(reader.result);
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = async () => {
+    if (!GAS_WEB_APP_URL) {
+      alert("System Error: GAS_WEB_APP_URL is not configured by the developer.");
+      return;
+    }
+    setIsSubmitting(true);
+    setSubmitStatus("Submitting...");
+    try {
+      const res = await fetch(GAS_WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({ word: word.toLowerCase(), meaning: customMeaning, imageBase64 })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitStatus("Success! " + data.message);
+        if (imageBase64) setImgSrc(imageBase64);
+        setHasError(false); // Remove incomplete state
+        if (customMeaning && window.BIP39_THAI) {
+          window.BIP39_THAI[word.toLowerCase()] = customMeaning;
+        }
+      } else {
+        setSubmitStatus("Error: " + data.message);
+      }
+    } catch (e) {
+      setSubmitStatus("Error connecting to server.");
+    }
+    setIsSubmitting(false);
+  };
 
   return (
     <div className="vocab-overlay" onClick={onClose}>
-      <div className="vocab-modal" onClick={e => e.stopPropagation()}>
+      <div className="vocab-modal" onClick={e => e.stopPropagation()} style={{ maxHeight: "95vh" }}>
         <button className="vocab-close" onClick={onClose}>✕</button>
+        
+        {isIncomplete && (
+          <div style={{ background: "var(--palm-fruit)", color: "white", padding: "8px", borderRadius: "8px", fontWeight: "bold", fontSize: 14 }}>
+            🌟 Help Bitret Verify and Learn Word!
+          </div>
+        )}
+
         <img 
           src={imgSrc} 
           onError={() => { setImgSrc("./public/logo.svg"); setHasError(true); }} 
           className="vocab-img" 
+          style={{ display: hasError && !imageBase64 ? "none" : "block" }}
           alt={word}
         />
+
         <div className="vocab-word">{word}</div>
-        <div className="vocab-trans">{trans}</div>
-        {hasError && (
+        {!isIncomplete && <div className="vocab-trans">{displayMeaning}</div>}
+
+        {isIncomplete && (
+          <div style={{ textAlign: "left", fontSize: 14, background: "#f5f5f5", padding: "12px", borderRadius: "8px", border: "2px dashed var(--text-muted)", display: "flex", flexDirection: "column", gap: 12 }}>
+            <p style={{ margin: 0, fontWeight: "bold", color: "var(--text-mockup)" }}>📝 Crowdsourcing Mission:</p>
+            
+            <button className="btn-brutal yellow" style={{ padding: "6px", fontSize: 12 }} onClick={handleCopyPrompt}>
+              1. 📋 Copy Prompt for AI Image Gen
+            </button>
+            
+            <label style={{ fontSize: 12, fontWeight: "bold" }}>2. Thai Meaning:</label>
+            <input 
+              type="text" 
+              value={customMeaning} 
+              onChange={e => setCustomMeaning(e.target.value)} 
+              placeholder="ความหมายภาษาไทย..."
+              style={{ padding: "8px", border: "2px solid var(--text-muted)", borderRadius: "8px" }}
+            />
+
+            <label style={{ fontSize: 12, fontWeight: "bold" }}>3. Upload Generated Image:</label>
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={handleImageUpload} 
+              style={{ fontSize: 12 }}
+            />
+            
+            {/* GAS URL configuration is now handled in the code by the developer */}
+
+            <button 
+              className="btn-brutal primary" 
+              style={{ padding: "8px", fontSize: 14, marginTop: 8 }} 
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Uploading..." : "🚀 Submit & Update Word"}
+            </button>
+            {submitStatus && <div style={{ fontSize: 12, color: submitStatus.includes("Error") ? "red" : "green", textAlign: "center" }}>{submitStatus}</div>}
+          </div>
+        )}
+
+        {!isIncomplete && hasError && (
           <a href={`https://www.google.com/search?q=${word}+meaning`} target="_blank" rel="noopener noreferrer" className="btn-brutal yellow" style={{marginTop: 12, textDecoration: "none"}}>
             🔍 Search Google
           </a>
