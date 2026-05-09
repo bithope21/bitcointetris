@@ -2246,8 +2246,9 @@ function VocabModal({ word, onClose }) {
         <button className="vocab-close" onClick={onClose}>✕</button>
         
         {isIncomplete && (
-          <div style={{ background: "var(--palm-fruit)", color: "white", padding: "8px", borderRadius: "8px", fontWeight: "bold", fontSize: 14 }}>
-            🌟 Help Bitret Verify and Learn Word!
+          <div style={{ background: "var(--palm-fruit)", color: "var(--white)", padding: "12px", borderRadius: "12px", fontWeight: "900", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: "0 4px 0 oklch(0% 0 0 / 0.15)", marginTop: 8 }}>
+            <img src="./public/logo.svg" alt="Bitret Logo" style={{ width: 32, height: 32, filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.3))" }} />
+            <span>Help Bitret Verify!</span>
           </div>
         )}
 
@@ -2276,7 +2277,7 @@ function VocabModal({ word, onClose }) {
               value={customMeaning} 
               onChange={e => setCustomMeaning(e.target.value)} 
               placeholder="ความหมายภาษาไทย..."
-              style={{ padding: "8px", border: "2px solid var(--text-muted)", borderRadius: "8px" }}
+              style={{ padding: "10px", border: "2px solid var(--text-muted)", borderRadius: "8px", width: "100%", fontSize: 14 }}
             />
 
             <label style={{ fontSize: 12, fontWeight: "bold" }}>3. Upload Generated Image:</label>
@@ -2284,7 +2285,7 @@ function VocabModal({ word, onClose }) {
               type="file" 
               accept="image/*" 
               onChange={handleImageUpload} 
-              style={{ fontSize: 12 }}
+              style={{ fontSize: 12, width: "100%", padding: "8px", background: "white", borderRadius: "8px", border: "1px solid var(--text-muted)" }}
             />
             
             {/* GAS URL configuration is now handled in the code by the developer */}
