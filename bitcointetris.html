@@ -857,8 +857,8 @@ body {
   box-shadow: var(--shadow-soft), var(--shadow-game);
   border-radius: var(--radius-2xl);
   padding: 18px; position: relative;
-  width: min(92vw, 92dvh, 400px);
-  height: min(92vw, 92dvh, 400px);
+  width: min(92vw, 92dvh, 440px);
+  height: min(92vw, 92dvh, 440px);
   max-width: calc(100vw - 24px);
   max-height: calc(100dvh - 24px);
   aspect-ratio: 1 / 1;
@@ -866,6 +866,13 @@ body {
   overflow-y: auto;
   text-align: center; display: flex; flex-direction: column; gap: 12px;
   animation: vocabPop .2s ease-out both;
+}
+.vocab-modal-card {
+  justify-content: center;
+  overflow-y: hidden;
+}
+.vocab-modal-incomplete {
+  justify-content: flex-start;
 }
 .vocab-modal > * {
   max-width: 100%;
@@ -912,13 +919,20 @@ body {
   border-radius: var(--radius-xl);
   box-shadow: inset 0 0 10px rgba(0,0,0,.05);
 }
+.vocab-modal-card .vocab-img {
+  flex: 0 0 68%;
+  height: 68%;
+  max-height: none;
+  padding: 8px;
+  object-fit: contain;
+}
 .vocab-word {
-  font-size: clamp(26px, 8vmin, 42px); font-weight: 900; color: var(--text-mockup);
-  line-height: 1.1; margin-top: 4px; text-transform: uppercase;
+  font-size: clamp(32px, 10vmin, 56px); font-weight: 900; color: var(--text-mockup);
+  line-height: .95; margin-top: 4px; text-transform: uppercase;
 }
 .vocab-trans {
-  font-size: clamp(16px, 5vmin, 22px); font-weight: 700; color: var(--grass-green);
-  background: var(--white); padding: 8px 16px; border: 2px solid oklch(0% 0 0 / 0.1);
+  font-size: clamp(20px, 6vmin, 30px); font-weight: 900; color: var(--grass-green);
+  background: var(--white); padding: 8px 18px; border: 2px solid oklch(0% 0 0 / 0.1);
   border-radius: var(--radius-xl); display: inline-block; margin: 0 auto;
 }
 
@@ -1010,6 +1024,10 @@ body {
   }
   .vocab-img {
     max-height: 24%;
+  }
+  .vocab-modal-card .vocab-img {
+    flex-basis: 70%;
+    height: 70%;
   }
   .bitret-help-card {
     justify-content: flex-start;
@@ -2316,7 +2334,7 @@ function VocabModal({ word, onClose }) {
 
   return (
     <div className="vocab-overlay" onClick={onClose}>
-      <div className="vocab-modal" onClick={e => e.stopPropagation()}>
+      <div className={`vocab-modal ${isIncomplete ? "vocab-modal-incomplete" : "vocab-modal-card"}`} onClick={e => e.stopPropagation()}>
         <button className="vocab-close" onClick={onClose}>✕</button>
         
         {isIncomplete && (
