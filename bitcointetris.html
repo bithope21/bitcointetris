@@ -1427,13 +1427,17 @@ const AudioEngine = {
   sfxEnabled: loadStats().sfxEnabled !== false, // default true
   vibrateEnabled: loadStats().vibrateEnabled !== false, // default true
 
-  init() {
-    if (this.ctx) return;
+  init(forceResume = false) {
     try {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-      this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.value = 0.3;
-      this.masterGain.connect(this.ctx.destination);
+      if (!this.ctx) {
+        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.value = 0.3;
+        this.masterGain.connect(this.ctx.destination);
+      }
+      if (forceResume && this.ctx.state === 'suspended') {
+        this.ctx.resume();
+      }
     } catch (e) {
       console.warn("AudioContext not supported");
     }
@@ -1441,7 +1445,7 @@ const AudioEngine = {
 
   playTone(freq, type, duration, vol = 1) {
     if (!this.sfxEnabled || !this.ctx) return;
-    this.init();
+    this.init(true);
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
     osc.type = type;
@@ -1469,7 +1473,7 @@ const AudioEngine = {
 
   startBGM() {
     if (!this.bgmEnabled || !this.ctx) return;
-    this.init();
+    this.init(true);
     this.stopBGM();
     let noteIdx = 0;
     // Simple 8-bit retro baseline arpeggio
@@ -2873,7 +2877,7 @@ function App() {
 
   // When Play is clicked from menu, use current config (defaults) and go to intro
   const handlePlay = () => {
-    AudioEngine.init(); // Init audio context on first user interaction
+    AudioEngine.init(true); // Init and resume audio context on first user interaction
     // ensure pool is set
     const pool = config.pool && config.pool.length > 0 ? config.pool : window.BIP39_4LETTER;
     
