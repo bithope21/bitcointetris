@@ -1152,7 +1152,8 @@ body {
 // SAFETY: No real seeds. No keys. No storage of mnemonic data.
 // ============================================================
 
-const SHAPES = {
+// 4-cell shapes (for 4-letter words)
+const SHAPES4 = {
   I: [[1,1,1,1]],
   O: [[1,1],[1,1]],
   T: [[0,1,0],[1,1,1]],
@@ -1161,11 +1162,21 @@ const SHAPES = {
   J: [[1,0,0],[1,1,1]],
   L: [[0,0,1],[1,1,1]],
 };
+// 3-cell shapes (for 3-letter words)
+const SHAPES3 = {
+  L3: [[1,0],[1,0],[1,1]],
+  S3: [[0,1],[1,1],[1,0]],
+  I3: [[1],[1],[1]],
+};
 
 const COLORS = {
   I: "#5ac8ff", O: "#ffd23f", T: "#c084fc",
   S: "#7be495", Z: "#ff7a90", J: "#5b8def", L: "#ff9f43",
+  I3: "#f97316", L3: "#a78bfa", S3: "#34d399",
 };
+
+// Combined for lookup
+const SHAPES = { ...SHAPES4, ...SHAPES3 };
 
 const COLS = 10;
 const ROWS = 20;
@@ -1202,19 +1213,25 @@ function collides(board, piece) {
   return false;
 }
 
-function pickWord(pool) {
+// Pick a word that hasn't been used in the current ticket yet
+function pickWord(pool, usedInTicket = []) {
+  const usedSet = new Set(usedInTicket);
+  const available = pool.filter(w => !usedSet.has(w));
+  const src = available.length > 0 ? available : pool; // fallback if all used
   const arr = new Uint32Array(1);
   crypto.getRandomValues(arr);
-  return pool[arr[0] % pool.length];
+  return src[arr[0] % src.length];
 }
 
-function spawnPiece(pool) {
-  const types = Object.keys(SHAPES);
+// Match shape set to word length: 3-letter words → 3-cell shapes, 4-letter → 4-cell shapes
+function spawnPiece(pool, usedInTicket = []) {
+  const word = pickWord(pool, usedInTicket);
+  const shapeSet = word.length === 3 ? SHAPES3 : SHAPES4;
+  const types = Object.keys(shapeSet);
   const arr = new Uint32Array(1);
   crypto.getRandomValues(arr);
   const type = types[arr[0] % types.length];
-  const shape = SHAPES[type].map(r => [...r]);
-  const word = pickWord(pool);
+  const shape = shapeSet[type].map(r => [...r]);
   return {
     type, shape, color: COLORS[type], word,
     letters: word.split(""),
@@ -1799,7 +1816,13 @@ function GameShell({ config, onGameOver, pushToast }) {
     }
 
     if (gotWords.length > 0) {
-      setCollectedWords(prev => [...prev, ...gotWords]);
+      // Dedup: only add words not already in the current ticket window
+      setCollectedWords(prev => {
+        const ticketStart = Math.floor(prev.length / wordsPerTicket) * wordsPerTicket;
+        const currentTicketWords = new Set(prev.slice(ticketStart));
+        const newUnique = gotWords.filter(w => !currentTicketWords.has(w));
+        return [...prev, ...newUnique];
+      });
       gotWords.forEach(w => pushToast(`Word: ${w.toUpperCase()}`));
     }
 
@@ -1822,8 +1845,11 @@ function GameShell({ config, onGameOver, pushToast }) {
       return;
     }
     setPiece(newPiece);
-    setNext(E.spawnPiece(config.pool));
-  }, [board, next, config.pool, tickets, collectedWords, onGameOver, pushToast, spawnParticles]);
+    // Pass current ticket words to avoid duplicates in next spawned piece
+    const ticketStart = Math.floor(collectedWords.length / wordsPerTicket) * wordsPerTicket;
+    const usedInTicket = collectedWords.slice(ticketStart);
+    setNext(E.spawnPiece(config.pool, usedInTicket));
+  }, [board, next, config.pool, tickets, collectedWords, wordsPerTicket, onGameOver, pushToast, spawnParticles]);
 
   // --- ticket creation ---
   useEffect(() => {
@@ -2618,9 +2644,14 @@ function App() {
   const handlePlay = () => {
     // ensure pool is set
     const pool = config.pool && config.pool.length > 0 ? config.pool : window.BIP39_4LETTER;
-    const resolvedMode = config.wordCount === "random"
-      ? (new Uint32Array(1), crypto.getRandomValues(new Uint32Array(1))[0] % 2 === 0 ? "12" : "24")
-      : (config.wordCount || "12");
+    
+    let resolvedMode = config.wordCount || "12";
+    if (config.wordCount === "random") {
+      const arr = new Uint32Array(1);
+      crypto.getRandomValues(arr);
+      resolvedMode = arr[0] % 2 === 0 ? "12" : "24";
+    }
+    
     setConfig(c => ({ ...c, pool, resolvedMode }));
     setPhase("intro");
   };
