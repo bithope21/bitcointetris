@@ -234,6 +234,18 @@ body {
 }
 @keyframes slideIn { from { margin-top: -20px; opacity: 0; } to { margin-top: 0; opacity: 1; } }
 
+.toast-ticket-wrap {
+  position: fixed; bottom: 80px; left: 0; width: 100%;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 9999; pointer-events: none;
+}
+.toast.ticket-toast {
+  background: var(--gold); color: var(--ink); border: 3px solid var(--ink);
+  padding: 12px 24px; font-size: 16px; font-weight: 900;
+  box-shadow: 0 6px 16px rgba(0,0,0,.4);
+  animation: slideUp .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
 /* ===================================================
    MAIN MENU
    =================================================== */
@@ -663,6 +675,13 @@ body {
   -webkit-user-select: none;
   user-select: none;
   transition: transform 0.1s, box-shadow 0.1s;
+  position: relative;
+}
+.dpad-btn::before {
+  content: "";
+  position: absolute;
+  inset: -15px; /* Increase touch area by 15px on all sides */
+  z-index: 1;
 }
 .dpad-btn:active { transform: translateY(5px); box-shadow: 0 0 0 var(--ink); }
 .dpad-center {
@@ -679,6 +698,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  transform: translateY(-21px); /* Move buttons up */
 }
 .action-btn {
   width: 62px; height: 62px;
@@ -692,6 +712,14 @@ body {
   user-select: none;
   border: 3px solid var(--ink);
   transition: transform 0.1s, box-shadow 0.1s;
+  position: relative;
+}
+.action-btn::before {
+  content: "";
+  position: absolute;
+  inset: -15px; /* Larger touch area */
+  z-index: 1;
+  border-radius: 50%;
 }
 .action-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--ink) !important; }
 .action-btn-a {
@@ -707,6 +735,14 @@ body {
   background: #4caf50;
   box-shadow: 0 5px 0 var(--ink);
   font-size: 11px;
+  position: relative;
+}
+.action-btn-drop::before {
+  content: "";
+  position: absolute;
+  inset: -15px;
+  z-index: 1;
+  border-radius: 10px;
 }
 .action-lbl { font-size: 8px; color: var(--ink); font-weight: 900; background: rgba(255,255,255,0.8); padding: 0 4px; border-radius: 4px; margin-top: 2px; }
 
@@ -717,6 +753,9 @@ body {
   padding: 6px 20px 14px;
   align-items: center;
   justify-content: space-between;
+  user-select: none;
+  -webkit-touch-callout: none;
+  pointer-events: none; /* Make unselectable to prevent interrupting gameplay */
 }
 .device-speaker {
   display: flex;
@@ -994,6 +1033,19 @@ body {
   20% { transform: scale(1); opacity: 1; }
   80% { transform: scale(1); opacity: 1; }
   100% { transform: scale(0); opacity: 0; }
+}
+
+.btc-particle {
+  position: absolute;
+  font-size: clamp(30px, 8vw, 60px); font-weight: 900; color: #ff9900;
+  text-shadow: 0 4px 0 #cc7a00;
+  animation: btcBurst 2.5s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+@keyframes btcBurst {
+  0% { transform: translate(0,0) scale(0) rotate(0deg); opacity: 1; }
+  15% { transform: translate(var(--dx), var(--dy)) scale(1.5) rotate(180deg); opacity: 1; }
+  80% { transform: translate(calc(var(--dx) * 1.5), calc(var(--dy) * 1.5)) scale(1.5) rotate(360deg); opacity: 1; }
+  100% { transform: translate(calc(var(--dx) * 1.5), calc(var(--dy) * 1.5)) scale(0) rotate(720deg); opacity: 0; }
 }
 
 /* ===================================================
@@ -1363,6 +1415,96 @@ function saveStats(p) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...s, ...p }));
 }
 
+// ============================================================
+// AUDIO & HAPTIC ENGINE (Web Audio API Synthesizer)
+// ============================================================
+const AudioEngine = {
+  ctx: null,
+  masterGain: null,
+  bgmOsc: null,
+  bgmInterval: null,
+  bgmEnabled: loadStats().bgmEnabled !== false, // default true
+  sfxEnabled: loadStats().sfxEnabled !== false, // default true
+  vibrateEnabled: loadStats().vibrateEnabled !== false, // default true
+
+  init() {
+    if (this.ctx) return;
+    try {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this.masterGain = this.ctx.createGain();
+      this.masterGain.gain.value = 0.3;
+      this.masterGain.connect(this.ctx.destination);
+    } catch (e) {
+      console.warn("AudioContext not supported");
+    }
+  },
+
+  playTone(freq, type, duration, vol = 1) {
+    if (!this.sfxEnabled || !this.ctx) return;
+    this.init();
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+    gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(this.masterGain);
+    osc.start();
+    osc.stop(this.ctx.currentTime + duration);
+  },
+
+  playMove() { this.playTone(400, 'square', 0.05, 0.2); },
+  playRotate() { this.playTone(600, 'square', 0.05, 0.3); },
+  playDrop() { this.playTone(200, 'triangle', 0.1, 0.4); },
+  playClear() {
+    this.playTone(800, 'square', 0.1, 0.4);
+    setTimeout(() => this.playTone(1200, 'square', 0.2, 0.5), 100);
+  },
+  playTicket() {
+    this.playTone(500, 'sine', 0.1, 0.5);
+    setTimeout(() => this.playTone(700, 'sine', 0.1, 0.5), 100);
+    setTimeout(() => this.playTone(1000, 'sine', 0.3, 0.6), 200);
+  },
+
+  startBGM() {
+    if (!this.bgmEnabled || !this.ctx) return;
+    this.init();
+    this.stopBGM();
+    let noteIdx = 0;
+    // Simple 8-bit retro baseline arpeggio
+    const notes = [220, 261.63, 329.63, 261.63, 196, 261.63, 329.63, 392]; 
+    this.bgmInterval = setInterval(() => {
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = notes[noteIdx];
+      gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.2);
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.2);
+      noteIdx = (noteIdx + 1) % notes.length;
+    }, 250);
+  },
+
+  stopBGM() {
+    if (this.bgmInterval) {
+      clearInterval(this.bgmInterval);
+      this.bgmInterval = null;
+    }
+  },
+
+  vibrate(ms = 15) {
+    if (this.vibrateEnabled && navigator.vibrate) {
+      navigator.vibrate(ms);
+    }
+  }
+};
+
+
 async function fakeAddressFromWords(words) {
   // PROTOTYPE-ONLY: NOT a real BIP-39 → address derivation.
   // A real derivation requires PBKDF2 + BIP32.
@@ -1379,10 +1521,17 @@ async function fakeAddressFromWords(words) {
 // Toast
 // ============================================================
 function ToastHost({ toasts }) {
+  const normalToasts = toasts.filter(t => !t.isTicket);
+  const ticketToasts = toasts.filter(t => t.isTicket);
   return (
-    <div className="toast-wrap">
-      {toasts.map(t => <div key={t.id} className="toast">{t.text}</div>)}
-    </div>
+    <>
+      <div className="toast-wrap">
+        {normalToasts.map(t => <div key={t.id} className="toast">{t.text}</div>)}
+      </div>
+      <div className="toast-ticket-wrap">
+        {ticketToasts.map(t => <div key={t.id} className="toast ticket-toast">{t.text}</div>)}
+      </div>
+    </>
   );
 }
 
@@ -1640,6 +1789,60 @@ function SettingsScreen({ config, setConfig, onStart, onBack }) {
             </div>
           </div>
           {pool.length === 0 && <div style={{ color: "var(--red)", fontSize: 12 }}>No words for this selection.</div>}
+          
+          {/* Audio & Haptics Settings */}
+          <h3 style={{ margin: "20px 0 10px", fontSize: 18 }}>Audio & Haptics</h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 16 }}>
+            {/* BGM Toggle */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, fontWeight: 800 }}>Background Music</span>
+              <button 
+                onClick={() => {
+                  const val = !AudioEngine.bgmEnabled;
+                  AudioEngine.bgmEnabled = val;
+                  saveStats({ bgmEnabled: val });
+                  setConfig(c => ({...c})); // force render
+                }}
+                style={{ background: AudioEngine.bgmEnabled ? "var(--grass-green)" : "#e53935", color: "white", border: "2px solid var(--ink)", padding: "4px 12px", borderRadius: 12, fontWeight: 900, cursor: "pointer", width: 60 }}
+              >
+                {AudioEngine.bgmEnabled ? "ON" : "OFF"}
+              </button>
+            </div>
+            
+            {/* SFX Toggle */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, fontWeight: 800 }}>Sound Effects</span>
+              <button 
+                onClick={() => {
+                  const val = !AudioEngine.sfxEnabled;
+                  AudioEngine.sfxEnabled = val;
+                  saveStats({ sfxEnabled: val });
+                  setConfig(c => ({...c}));
+                }}
+                style={{ background: AudioEngine.sfxEnabled ? "var(--grass-green)" : "#e53935", color: "white", border: "2px solid var(--ink)", padding: "4px 12px", borderRadius: 12, fontWeight: 900, cursor: "pointer", width: 60 }}
+              >
+                {AudioEngine.sfxEnabled ? "ON" : "OFF"}
+              </button>
+            </div>
+            
+            {/* Vibration Toggle */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 13, fontWeight: 800 }}>Vibration (Android)</span>
+              <button 
+                onClick={() => {
+                  const val = !AudioEngine.vibrateEnabled;
+                  AudioEngine.vibrateEnabled = val;
+                  saveStats({ vibrateEnabled: val });
+                  setConfig(c => ({...c}));
+                  if (val) AudioEngine.vibrate(15);
+                }}
+                style={{ background: AudioEngine.vibrateEnabled ? "var(--grass-green)" : "#e53935", color: "white", border: "2px solid var(--ink)", padding: "4px 12px", borderRadius: 12, fontWeight: 900, cursor: "pointer", width: 60 }}
+              >
+                {AudioEngine.vibrateEnabled ? "ON" : "OFF"}
+              </button>
+            </div>
+          </div>
+          
         </div>
 
         {/* Right: categories */}
@@ -1802,6 +2005,8 @@ function GameShell({ config, onGameOver, pushToast }) {
       setFlashRows(clearedRows);
       setTimeout(() => setFlashRows([]), 350);
       spawnParticles(clearedRows, nLines);
+      AudioEngine.playClear();
+      AudioEngine.vibrate([30, 50, 30]);
     }
 
     setBoard(cleared);
@@ -1823,7 +2028,7 @@ function GameShell({ config, onGameOver, pushToast }) {
         const newUnique = gotWords.filter(w => !currentTicketWords.has(w));
         return [...prev, ...newUnique];
       });
-      gotWords.forEach(w => pushToast(`Word: ${w.toUpperCase()}`));
+      gotWords.forEach(w => pushToast(w.toUpperCase()));
     }
 
     // spawn next piece
@@ -1866,7 +2071,9 @@ function GameShell({ config, onGameOver, pushToast }) {
         validBip39: false,
       };
       setTickets(t => [...t, newTicket]);
-      pushToast(`🎟 Ticket #${newTicket.number} complete!`);
+      pushToast(`🎟 Ticket #${newTicket.number} complete!`, true); // true = isTicket
+      AudioEngine.playTicket();
+      AudioEngine.vibrate([50, 100, 50]);
     }
   }, [collectedWords, wordsPerTicket, tickets.length, config.resolvedMode, pushToast]);
 
@@ -1874,7 +2081,12 @@ function GameShell({ config, onGameOver, pushToast }) {
   const tryMove = useCallback((dx, dy) => {
     setPiece(p => {
       const np = { ...p, c: p.c + dx, r: p.r + dy };
-      return E.collides(board, np) ? p : np;
+      if (E.collides(board, np)) return p;
+      if (dx !== 0) {
+        AudioEngine.playMove();
+        AudioEngine.vibrate(10);
+      }
+      return np;
     });
   }, [board]);
 
@@ -1883,7 +2095,11 @@ function GameShell({ config, onGameOver, pushToast }) {
       const np = { ...p, shape: E.rotateShape(p.shape) };
       for (const dx of [0, -1, 1, -2, 2]) {
         const test = { ...np, c: np.c + dx };
-        if (!E.collides(board, test)) return test;
+        if (!E.collides(board, test)) {
+          AudioEngine.playRotate();
+          AudioEngine.vibrate(10);
+          return test;
+        }
       }
       return p;
     });
@@ -1902,6 +2118,8 @@ function GameShell({ config, onGameOver, pushToast }) {
   }, [board, lockAndAdvance]);
 
   const hardDrop = useCallback(() => {
+    AudioEngine.playDrop();
+    AudioEngine.vibrate(20);
     setPiece(p => {
       let test = p;
       let dist = 0;
@@ -1914,6 +2132,13 @@ function GameShell({ config, onGameOver, pushToast }) {
       return test;
     });
   }, [board, lockAndAdvance]);
+
+  // --- BGM ---
+  useEffect(() => {
+    if (!paused) AudioEngine.startBGM();
+    else AudioEngine.stopBGM();
+    return () => AudioEngine.stopBGM();
+  }, [paused]);
 
   // --- gravity ---
   useEffect(() => {
@@ -2535,8 +2760,8 @@ function TicketCard({ ticket, onVerify, onWordClick }) {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 3, marginBottom: 10 }}>
           {ticket.words.map((w, i) => (
-            <div key={i} className="word-chip" style={{cursor: "pointer"}} onClick={() => onWordClick && onWordClick(w)}>
-              <span className="num">{String(i + 1).padStart(2, "0")}</span>{w}
+            <div key={i} className="word-chip" style={{cursor: showReveal ? "default" : "pointer"}} onClick={() => !showReveal && onWordClick && onWordClick(w)}>
+              <span className="num">{String(i + 1).padStart(2, "0")}</span>{showReveal ? "????" : w}
             </div>
           ))}
         </div>
@@ -2568,6 +2793,12 @@ function TicketCard({ ticket, onVerify, onWordClick }) {
 
       {anim === "exploding" && (
         <div className="explosion-overlay">
+          {Array.from({length: 15}).map((_, i) => (
+             <div key={i} className="btc-particle" style={{
+                "--dx": (Math.random() - 0.5) * window.innerWidth * 0.8 + "px",
+                "--dy": (Math.random() - 0.5) * window.innerHeight * 0.8 + "px",
+             }}>₿</div>
+          ))}
           <div className="explosion-text">0 BTC</div>
         </div>
       )}
@@ -2624,9 +2855,9 @@ function App() {
   const [gameStats, setGameStats] = useState(null);
   const [toasts, setToasts] = useState([]);
 
-  const pushToast = useCallback((text) => {
+  const pushToast = useCallback((text, isTicket = false) => {
     const id = Math.random();
-    setToasts(t => [...t, { id, text }]);
+    setToasts(t => [...t, { id, text, isTicket }]);
     setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 2200);
   }, []);
 
@@ -2642,6 +2873,7 @@ function App() {
 
   // When Play is clicked from menu, use current config (defaults) and go to intro
   const handlePlay = () => {
+    AudioEngine.init(); // Init audio context on first user interaction
     // ensure pool is set
     const pool = config.pool && config.pool.length > 0 ? config.pool : window.BIP39_4LETTER;
     
