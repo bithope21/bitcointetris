@@ -7,9 +7,9 @@
 ## 📊 สถานะปัจจุบัน (Current Status)
 
 - **Official BIP-39 Words (3-4 letters):** 545 คำ
-- **Generated Images:** 77 รูป
-- **Remaining:** 468 รูป
-- **Progress:** `77 / 545` (14%)
+- **Generated Images:** 94 รูป
+- **Remaining:** 451 รูป
+- **Progress:** `94 / 545` (17%)
 
 ---
 
