@@ -7,9 +7,11 @@
 ## 📊 สถานะปัจจุบัน (Current Status)
 
 - **Official BIP-39 Words (3-4 letters):** 545 คำ
-- **Generated Images:** 94 รูป
-- **Remaining:** 451 รูป
-- **Progress:** `94 / 545` (17%)
+- **Generated Images:** 111 รูป
+- **Remaining:** 434 รูป
+- **Progress:** `111 / 545` (20%)
+- **Last Generated:** deal, deer, defy, deny, desk, dial, dice, diet, dirt, dish, dog, doll, door, dose, dove, draw, drip
+- **Next Batch:** drop, drum, dry, duck, dumb, dune, dust, duty, earn, east
 
 ---
 
@@ -25,7 +27,7 @@
 สไตล์ภาพที่ต้องการ:
 * ภาพเดี่ยว 1 คำต่อ 1 รูป
 * ขนาดสี่เหลี่ยมจัตุรัส 1:1
-* พื้นหลังสีขาวหรือ off-white สะอาด
+* พื้นหลังสีขาวสะอาด
 * ภาพวาดการ์ตูน 2D / soft vector illustration
 * โทนสดใส เป็นมิตรกับเด็ก
 * เส้นขอบนุ่ม สะอาด ไม่รก
