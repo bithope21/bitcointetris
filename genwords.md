@@ -7,11 +7,11 @@
 ## 📊 สถานะปัจจุบัน (Current Status)
 
 - **Official BIP-39 Words (3-4 letters):** 545 คำ
-- **Generated Images:** 129 รูป
-- **Remaining:** 416 รูป
-- **Progress:** `129 / 545` (24%)
-- **Last Generated:** drop, drum, dry, duck, dumb, dune, dust, duty, earn, east, easy, echo, edge, edit, egg, else, end, era
-- **Next Batch:** evil, exit, eye, face, fade, fall, fame, fan, farm, fat
+- **Generated Images:** 146 รูป
+- **Remaining:** 399 รูป
+- **Progress:** `146 / 545` (27%)
+- **Last Generated:** fee, feed, feel, few, file, film, find
+- **Next Batch:** fine, fire, firm, fish, fit, fix, flag, flat, flee, flip
 
 ---
 
