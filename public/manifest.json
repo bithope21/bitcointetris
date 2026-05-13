@@ -9,13 +9,13 @@
   "theme_color": "#FFD700",
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "/bitcointetris.PNG",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/bitcointetris.PNG",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
