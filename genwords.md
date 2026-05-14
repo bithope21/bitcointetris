@@ -7,11 +7,11 @@
 ## 📊 สถานะปัจจุบัน (Current Status)
 
 - **Official BIP-39 Words (3-4 letters):** 545 คำ
-- **Generated Images:** 146 รูป
-- **Remaining:** 399 รูป
-- **Progress:** `146 / 545` (27%)
-- **Last Generated:** fee, feed, feel, few, file, film, find
-- **Next Batch:** fine, fire, firm, fish, fit, fix, flag, flat, flee, flip
+- **Generated Images:** 160 รูป
+- **Remaining:** 385 รูป
+- **Progress:** `160 / 545` (29.4%)
+- **Last Generated:** fog, foil, fold, food
+- **Next Batch:** fly, foam, foot, fork, fox, frog, fuel, fun, fury, gain
 
 ---
 
