@@ -7,11 +7,11 @@
 ## 📊 สถานะปัจจุบัน (Current Status)
 
 - **Official BIP-39 Words (3-4 letters):** 545 คำ
-- **Generated Images:** 177 รูป
-- **Remaining:** 368 รูป
-- **Progress:** `177 / 545` (32.5%)
-- **Last Generated:** game, gap, gas, gasp, gate, gaze, gift
-- **Next Batch:** girl, give, glad, glow, glue, goat, gold, good, gown, grab
+- **Generated Images:** 194 รูป
+- **Remaining:** 351 รูป
+- **Progress:** `194 / 545` (35.6%)
+- **Last Generated:** grid, grit, grow, gun, gym, hair, half
+- **Next Batch:** hand, hard, hat, have, hawk, head, help, hen, hero, high
 
 ---
 
