@@ -7,11 +7,13 @@
 ## 📊 สถานะปัจจุบัน (Current Status)
 
 - **Official BIP-39 Words (3-4 letters):** 545 คำ
-- **Generated Images:** 194 รูป
-- **Remaining:** 351 รูป
-- **Progress:** `194 / 545` (35.6%)
-- **Last Generated:** grid, grit, grow, gun, gym, hair, half
-- **Next Batch:** hand, hard, hat, have, hawk, head, help, hen, hero, high
+- **Generated Images:** 211 รูป
+- **Remaining:** 334 รูป
+- **Progress:** `211 / 545` (38.7%)
+- **Last Generated:** help, hen, hero, high, hill, hint, hip, hire, hold, hole, home
+- **Next Batch:** hood, hope, horn, host, hour, hub, huge, hunt, hurt, ice
+
+
 
 ---
 
