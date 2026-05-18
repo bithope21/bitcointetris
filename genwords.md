@@ -7,10 +7,10 @@
 ## 📊 สถานะปัจจุบัน (Current Status)
 
 - **Official BIP-39 Words (3-4 letters):** 545 คำ
-- **Generated Images:** 273 รูป
-- **Remaining:** 272 รูป
-- **Progress:** `273 / 545` (50.1%)
-- **Last Generated:** link, lion, list, live, load
+- **Generated Images:** 383 รูป
+- **Remaining:** 162 รูป
+- **Progress:** `383 / 545` (70.3%)
+- **Last Generated:** real, rely, rent, rib, rice, rich, ride, ring, riot, risk
 
 ---
 
@@ -22,28 +22,28 @@
 - [x] **Batch 3:** leaf, left, leg, lend, lens
 - [x] **Batch 4:** liar, life, lift, like, limb
 - [x] **Batch 5:** link, lion, list, live, load
-- [ ] **Batch 6:** loan, lock, long, loop, loud
-- [ ] **Batch 7:** love, mad, maid, mail, main
-- [ ] **Batch 8:** make, man, mask, mass, math
-- [ ] **Batch 9:** maze, mean, meat, melt, menu
-- [ ] **Batch 10:** mesh, milk, mind, miss, mix
-- [ ] **Batch 11:** mom, moon, more, move, much
-- [ ] **Batch 12:** mule, must, myth, name, near
-- [ ] **Batch 13:** neck, need, nest, net, news
-- [ ] **Batch 14:** next, nice, nose, note, now
-- [ ] **Batch 15:** nut, oak, obey, odor, off
-- [ ] **Batch 16:** oil, okay, old, omit, once
-- [ ] **Batch 17:** one, only, open, oval, oven
-- [ ] **Batch 18:** over, own, pact, page, pair
-- [ ] **Batch 19:** palm, park, pass, path, pave
-- [ ] **Batch 20:** pear, pen, pet, pig, pill
-- [ ] **Batch 21:** pink, pipe, play, plug, poem
-- [ ] **Batch 22:** poet, pole, pond, pony, pool
-- [ ] **Batch 23:** post, pull, pulp, push, put
-- [ ] **Batch 24:** quit, quiz, race, rack, rail
-- [ ] **Batch 25:** rain, ramp, rare, rate, raw
-- [ ] **Batch 26:** real, rely, rent, rib, rice
-- [ ] **Batch 27:** rich, ride, ring, riot, risk
+- [x] **Batch 6:** loan, lock, long, loop, loud
+- [x] **Batch 7:** love, mad, maid, mail, main
+- [x] **Batch 8:** make, man, mask, mass, math
+- [x] **Batch 9:** maze, mean, meat, melt, menu
+- [x] **Batch 10:** mesh, milk, mind, miss, mix
+- [x] **Batch 11:** mom, moon, more, move, much
+- [x] **Batch 12:** mule, must, myth, name, near
+- [x] **Batch 13:** neck, need, nest, net, news
+- [x] **Batch 14:** next, nice, nose, note, now
+- [x] **Batch 15:** nut, oak, obey, odor, off
+- [x] **Batch 16:** oil, okay, old, omit, once
+- [x] **Batch 17:** one, only, open, oval, oven
+- [x] **Batch 18:** over, own, pact, page, pair
+- [x] **Batch 19:** palm, park, pass, path, pave
+- [x] **Batch 20:** pear, pen, pet, pig, pill
+- [x] **Batch 21:** pink, pipe, play, plug, poem
+- [x] **Batch 22:** poet, pole, pond, pony, pool
+- [x] **Batch 23:** post, pull, pulp, push, put
+- [x] **Batch 24:** quit, quiz, race, rack, rail
+- [x] **Batch 25:** rain, ramp, rare, rate, raw
+- [x] **Batch 26:** real, rely, rent, rib, rice
+- [x] **Batch 27:** rich, ride, ring, riot, risk
 - [ ] **Batch 28:** road, roof, room, rose, rude
 - [ ] **Batch 29:** rug, rule, run, sad, safe
 - [ ] **Batch 30:** sail, salt, same, sand, save
