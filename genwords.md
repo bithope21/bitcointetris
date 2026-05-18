@@ -7,11 +7,11 @@
 ## 📊 สถานะปัจจุบัน (Current Status)
 
 - **Official BIP-39 Words (3-4 letters):** 545 คำ
-- **Generated Images:** 221 รูป
-- **Remaining:** 324 รูป
-- **Progress:** `221 / 545` (40.6%)
-- **Last Generated:** hood, hope, horn, host, hour, hub, huge, hunt, hurt, ice
-- **Next Batch:** icon, idea, idle, ill, inch, into, iron, item, jar, jazz
+- **Generated Images:** 238 รูป
+- **Remaining:** 307 รูป
+- **Progress:** `238 / 545` (43.7%)
+- **Last Generated:** job, join, joke, joy, jump, junk, just
+- **Next Batch:** keen, keep, key, kick, kid, kind, kiss, kit, kite, kiwi
 
 
 
