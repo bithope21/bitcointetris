@@ -7,21 +7,21 @@
 ## 📊 สถานะปัจจุบัน (Current Status)
 
 - **Official BIP-39 Words (3-4 letters):** 545 คำ
-- **Generated Images:** 248 รูป
-- **Remaining:** 297 รูป
-- **Progress:** `248 / 545` (45.5%)
-- **Last Generated:** keen, keep, key, kick, kid, kind, kiss, kit, kite, kiwi
+- **Generated Images:** 273 รูป
+- **Remaining:** 272 รูป
+- **Progress:** `273 / 545` (50.1%)
+- **Last Generated:** link, lion, list, live, load
 
 ---
 
 ## 📦 รายการ Batch ที่เหลือ (Remaining Batches)
 *Batch ละ 5 คำ สำหรับช่วยกันสร้างภาพจากแอปอื่นได้สะดวก*
 
-- [ ] **Batch 1:** knee, know, lab, lady, lake
-- [ ] **Batch 2:** lamp, lava, law, lawn, lazy
-- [ ] **Batch 3:** leaf, left, leg, lend, lens
-- [ ] **Batch 4:** liar, life, lift, like, limb
-- [ ] **Batch 5:** link, lion, list, live, load
+- [x] **Batch 1:** knee, know, lab, lady, lake
+- [x] **Batch 2:** lamp, lava, law, lawn, lazy
+- [x] **Batch 3:** leaf, left, leg, lend, lens
+- [x] **Batch 4:** liar, life, lift, like, limb
+- [x] **Batch 5:** link, lion, list, live, load
 - [ ] **Batch 6:** loan, lock, long, loop, loud
 - [ ] **Batch 7:** love, mad, maid, mail, main
 - [ ] **Batch 8:** make, man, mask, mass, math
