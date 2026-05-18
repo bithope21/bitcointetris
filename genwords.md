@@ -7,13 +7,76 @@
 ## 📊 สถานะปัจจุบัน (Current Status)
 
 - **Official BIP-39 Words (3-4 letters):** 545 คำ
-- **Generated Images:** 238 รูป
-- **Remaining:** 307 รูป
-- **Progress:** `238 / 545` (43.7%)
-- **Last Generated:** job, join, joke, joy, jump, junk, just
-- **Next Batch:** keen, keep, key, kick, kid, kind, kiss, kit, kite, kiwi
+- **Generated Images:** 248 รูป
+- **Remaining:** 297 รูป
+- **Progress:** `248 / 545` (45.5%)
+- **Last Generated:** keen, keep, key, kick, kid, kind, kiss, kit, kite, kiwi
 
+---
 
+## 📦 รายการ Batch ที่เหลือ (Remaining Batches)
+*Batch ละ 5 คำ สำหรับช่วยกันสร้างภาพจากแอปอื่นได้สะดวก*
+
+- [ ] **Batch 1:** knee, know, lab, lady, lake
+- [ ] **Batch 2:** lamp, lava, law, lawn, lazy
+- [ ] **Batch 3:** leaf, left, leg, lend, lens
+- [ ] **Batch 4:** liar, life, lift, like, limb
+- [ ] **Batch 5:** link, lion, list, live, load
+- [ ] **Batch 6:** loan, lock, long, loop, loud
+- [ ] **Batch 7:** love, mad, maid, mail, main
+- [ ] **Batch 8:** make, man, mask, mass, math
+- [ ] **Batch 9:** maze, mean, meat, melt, menu
+- [ ] **Batch 10:** mesh, milk, mind, miss, mix
+- [ ] **Batch 11:** mom, moon, more, move, much
+- [ ] **Batch 12:** mule, must, myth, name, near
+- [ ] **Batch 13:** neck, need, nest, net, news
+- [ ] **Batch 14:** next, nice, nose, note, now
+- [ ] **Batch 15:** nut, oak, obey, odor, off
+- [ ] **Batch 16:** oil, okay, old, omit, once
+- [ ] **Batch 17:** one, only, open, oval, oven
+- [ ] **Batch 18:** over, own, pact, page, pair
+- [ ] **Batch 19:** palm, park, pass, path, pave
+- [ ] **Batch 20:** pear, pen, pet, pig, pill
+- [ ] **Batch 21:** pink, pipe, play, plug, poem
+- [ ] **Batch 22:** poet, pole, pond, pony, pool
+- [ ] **Batch 23:** post, pull, pulp, push, put
+- [ ] **Batch 24:** quit, quiz, race, rack, rail
+- [ ] **Batch 25:** rain, ramp, rare, rate, raw
+- [ ] **Batch 26:** real, rely, rent, rib, rice
+- [ ] **Batch 27:** rich, ride, ring, riot, risk
+- [ ] **Batch 28:** road, roof, room, rose, rude
+- [ ] **Batch 29:** rug, rule, run, sad, safe
+- [ ] **Batch 30:** sail, salt, same, sand, save
+- [ ] **Batch 31:** say, scan, sea, seat, seed
+- [ ] **Batch 32:** seek, sell, shed, ship, shoe
+- [ ] **Batch 33:** shop, shy, sick, side, sign
+- [ ] **Batch 34:** silk, sing, six, size, ski
+- [ ] **Batch 35:** skin, slab, slam, slim, slot
+- [ ] **Batch 36:** slow, snap, snow, soap, sock
+- [ ] **Batch 37:** soda, soft, song, soon, sort
+- [ ] **Batch 38:** soul, soup, spin, spot, spy
+- [ ] **Batch 39:** stay, stem, step, such, suit
+- [ ] **Batch 40:** sun, sure, swap, swim, tag
+- [ ] **Batch 41:** tail, talk, tank, tape, task
+- [ ] **Batch 42:** taxi, team, tell, ten, tent
+- [ ] **Batch 43:** term, test, text, that, then
+- [ ] **Batch 44:** they, this, tide, tilt, time
+- [ ] **Batch 45:** tiny, tip, toe, tone, tool
+- [ ] **Batch 46:** top, toss, town, toy, trap
+- [ ] **Batch 47:** tray, tree, trim, trip, true
+- [ ] **Batch 48:** try, tube, tuna, turn, twin
+- [ ] **Batch 49:** two, type, ugly, undo, unit
+- [ ] **Batch 50:** upon, urge, use, used, van
+- [ ] **Batch 51:** vast, verb, very, view, visa
+- [ ] **Batch 52:** void, vote, wage, wait, walk
+- [ ] **Batch 53:** wall, want, warm, wash, wasp
+- [ ] **Batch 54:** wave, way, wear, web, west
+- [ ] **Batch 55:** wet, what, when, whip, wide
+- [ ] **Batch 56:** wife, wild, will, win, wine
+- [ ] **Batch 57:** wing, wink, wire, wise, wish
+- [ ] **Batch 58:** wolf, wood, wool, word, work
+- [ ] **Batch 59:** wrap, yard, year, you, zero
+- [ ] **Batch 60:** zone, zoo
 
 ---
 
@@ -89,7 +152,8 @@ console.log(need.slice(0, 20).join(', '));
 
 ## 🚀 Workflow การทำงาน
 
-1. รันสคริปต์ตรวจสอบด้านบน เพื่อเอาคำศัพท์ชุดถัดไป (เช่น คัดมาทีละ 10-20 คำ)
-2. นำคำเหล่านั้นไปใส่ในช่อง `รายการคำที่จะสร้างใน batch` ของ Prompt
+1. เลือก Batch ที่ต้องการสร้างจาก **รายการ Batch ที่เหลือ** ด้านบน (แต่ละ Batch มี 5 คำ)
+2. นำคำใน Batch นั้นไปใส่ในช่อง `รายการคำที่จะสร้างใน batch` ของ Prompt
 3. นำภาพที่ได้ (ขนาด 1024x1024px) มาเซฟใส่ในโฟลเดอร์ `/bip39-image/` โดยตั้งชื่อเป็น **ตัวพิมพ์เล็ก** ทั้งหมด เช่น `cool.png`
-4. อัปเดตตัวเลข **Status** ในไฟล์นี้ให้เป็นปัจจุบัน
+4. เมื่อสร้างภาพและเซฟลงเครื่องเสร็จแล้ว ให้ทำเครื่องหมายถูก `[x]` ที่ Batch นั้น เพื่อติดตามความคืบหน้า
+5. อัปเดตตัวเลข **Status** ด้านบนให้เป็นปัจจุบัน
