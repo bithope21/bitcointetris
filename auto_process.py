@@ -130,6 +130,9 @@ def main():
         words = [w.strip() for w in words_str.split(",")]
         
         img_path = os.path.join(INPUT_DIR, f"{batch_num}.png")
+        if not os.path.exists(img_path):
+            img_path = os.path.join(INPUT_DIR, f"{batch_num}.PNG")
+            
         if os.path.exists(img_path):
             success = process_batch(img_path, words)
             if success:

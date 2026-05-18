@@ -7,10 +7,10 @@
 ## 📊 สถานะปัจจุบัน (Current Status)
 
 - **Official BIP-39 Words (3-4 letters):** 545 คำ
-- **Generated Images:** 383 รูป
-- **Remaining:** 162 รูป
-- **Progress:** `383 / 545` (70.3%)
-- **Last Generated:** real, rely, rent, rib, rice, rich, ride, ring, riot, risk
+- **Generated Images:** 543 รูป
+- **Remaining:** 2 รูป
+- **Progress:** `543 / 545` (99.6%)
+- **Last Generated:** wolf, wood, wool, word, work, wrap, yard, year, you, zero
 
 ---
 
@@ -44,38 +44,38 @@
 - [x] **Batch 25:** rain, ramp, rare, rate, raw
 - [x] **Batch 26:** real, rely, rent, rib, rice
 - [x] **Batch 27:** rich, ride, ring, riot, risk
-- [ ] **Batch 28:** road, roof, room, rose, rude
-- [ ] **Batch 29:** rug, rule, run, sad, safe
-- [ ] **Batch 30:** sail, salt, same, sand, save
-- [ ] **Batch 31:** say, scan, sea, seat, seed
-- [ ] **Batch 32:** seek, sell, shed, ship, shoe
-- [ ] **Batch 33:** shop, shy, sick, side, sign
-- [ ] **Batch 34:** silk, sing, six, size, ski
-- [ ] **Batch 35:** skin, slab, slam, slim, slot
-- [ ] **Batch 36:** slow, snap, snow, soap, sock
-- [ ] **Batch 37:** soda, soft, song, soon, sort
-- [ ] **Batch 38:** soul, soup, spin, spot, spy
-- [ ] **Batch 39:** stay, stem, step, such, suit
-- [ ] **Batch 40:** sun, sure, swap, swim, tag
-- [ ] **Batch 41:** tail, talk, tank, tape, task
-- [ ] **Batch 42:** taxi, team, tell, ten, tent
-- [ ] **Batch 43:** term, test, text, that, then
-- [ ] **Batch 44:** they, this, tide, tilt, time
-- [ ] **Batch 45:** tiny, tip, toe, tone, tool
-- [ ] **Batch 46:** top, toss, town, toy, trap
-- [ ] **Batch 47:** tray, tree, trim, trip, true
-- [ ] **Batch 48:** try, tube, tuna, turn, twin
-- [ ] **Batch 49:** two, type, ugly, undo, unit
-- [ ] **Batch 50:** upon, urge, use, used, van
-- [ ] **Batch 51:** vast, verb, very, view, visa
-- [ ] **Batch 52:** void, vote, wage, wait, walk
-- [ ] **Batch 53:** wall, want, warm, wash, wasp
-- [ ] **Batch 54:** wave, way, wear, web, west
-- [ ] **Batch 55:** wet, what, when, whip, wide
-- [ ] **Batch 56:** wife, wild, will, win, wine
-- [ ] **Batch 57:** wing, wink, wire, wise, wish
-- [ ] **Batch 58:** wolf, wood, wool, word, work
-- [ ] **Batch 59:** wrap, yard, year, you, zero
+- [x] **Batch 28:** road, roof, room, rose, rude
+- [x] **Batch 29:** rug, rule, run, sad, safe
+- [x] **Batch 30:** sail, salt, same, sand, save
+- [x] **Batch 31:** say, scan, sea, seat, seed
+- [x] **Batch 32:** seek, sell, shed, ship, shoe
+- [x] **Batch 33:** shop, shy, sick, side, sign
+- [x] **Batch 34:** silk, sing, six, size, ski
+- [x] **Batch 35:** skin, slab, slam, slim, slot
+- [x] **Batch 36:** slow, snap, snow, soap, sock
+- [x] **Batch 37:** soda, soft, song, soon, sort
+- [x] **Batch 38:** soul, soup, spin, spot, spy
+- [x] **Batch 39:** stay, stem, step, such, suit
+- [x] **Batch 40:** sun, sure, swap, swim, tag
+- [x] **Batch 41:** tail, talk, tank, tape, task
+- [x] **Batch 42:** taxi, team, tell, ten, tent
+- [x] **Batch 43:** term, test, text, that, then
+- [x] **Batch 44:** they, this, tide, tilt, time
+- [x] **Batch 45:** tiny, tip, toe, tone, tool
+- [x] **Batch 46:** top, toss, town, toy, trap
+- [x] **Batch 47:** tray, tree, trim, trip, true
+- [x] **Batch 48:** try, tube, tuna, turn, twin
+- [x] **Batch 49:** two, type, ugly, undo, unit
+- [x] **Batch 50:** upon, urge, use, used, van
+- [x] **Batch 51:** vast, verb, very, view, visa
+- [x] **Batch 52:** void, vote, wage, wait, walk
+- [x] **Batch 53:** wall, want, warm, wash, wasp
+- [x] **Batch 54:** wave, way, wear, web, west
+- [x] **Batch 55:** wet, what, when, whip, wide
+- [x] **Batch 56:** wife, wild, will, win, wine
+- [x] **Batch 57:** wing, wink, wire, wise, wish
+- [x] **Batch 58:** wolf, wood, wool, word, work
+- [x] **Batch 59:** wrap, yard, year, you, zero
 - [ ] **Batch 60:** zone, zoo
 
 ---
