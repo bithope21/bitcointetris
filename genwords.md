@@ -7,10 +7,10 @@
 ## 📊 สถานะปัจจุบัน (Current Status)
 
 - **Official BIP-39 Words (3-4 letters):** 545 คำ
-- **Generated Images:** 543 รูป
-- **Remaining:** 2 รูป
-- **Progress:** `543 / 545` (99.6%)
-- **Last Generated:** wolf, wood, wool, word, work, wrap, yard, year, you, zero
+- **Generated Images:** 545 รูป
+- **Remaining:** 0 รูป
+- **Progress:** `545 / 545` (100.0%)
+- **Last Generated:** zone, zoo
 
 ---
 
@@ -76,7 +76,7 @@
 - [x] **Batch 57:** wing, wink, wire, wise, wish
 - [x] **Batch 58:** wolf, wood, wool, word, work
 - [x] **Batch 59:** wrap, yard, year, you, zero
-- [ ] **Batch 60:** zone, zoo
+- [x] **Batch 60:** zone, zoo
 
 ---
 
