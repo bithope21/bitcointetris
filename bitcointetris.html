@@ -1056,17 +1056,30 @@ body {
   100% { transform: scale(0); opacity: 0; }
 }
 
+.particles-container {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
 .btc-particle {
   position: absolute;
+  top: -50px; left: -50px;
+  width: 100px; height: 100px;
+  display: flex; align-items: center; justify-content: center;
   font-size: clamp(30px, 8vw, 60px); font-weight: 900; color: #ff9900;
   text-shadow: 0 4px 0 #cc7a00;
   animation: btcBurst 2.5s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+  will-change: transform, opacity;
 }
 @keyframes btcBurst {
-  0% { transform: translate(0,0) scale(0) rotate(0deg); opacity: 1; }
-  15% { transform: translate(var(--dx), var(--dy)) scale(1.5) rotate(180deg); opacity: 1; }
-  80% { transform: translate(calc(var(--dx) * 1.4), calc(var(--dy) * 1.4)) scale(1.5) rotate(540deg); opacity: 1; }
-  100% { transform: translate(calc(var(--dx) * 1.6), calc(var(--dy) * 1.6)) scale(0) rotate(720deg); opacity: 0; }
+  0% { transform: translate(0, 0) scale(0) rotate(0deg); opacity: 1; }
+  15% { transform: translate(var(--dx), var(--dy)) scale(1.5) rotate(360deg); opacity: 1; }
+  80% { transform: translate(calc(var(--dx) * 1.4), calc(var(--dy) * 1.4)) scale(1.5) rotate(720deg); opacity: 1; }
+  100% { transform: translate(calc(var(--dx) * 1.6), calc(var(--dy) * 1.6)) scale(0) rotate(1080deg); opacity: 0; }
 }
 
 /* ===================================================
@@ -2789,8 +2802,7 @@ function TicketCard({ ticket, onVerify, onWordClick }) {
 
   useEffect(() => {
     if (ticket.verified && anim === "idle") {
-      setAnim("exploding");
-      setTimeout(() => setAnim("done"), 2500);
+      setAnim("done");
     }
   }, [ticket.verified, anim]);
 
@@ -2869,12 +2881,14 @@ function TicketCard({ ticket, onVerify, onWordClick }) {
 
       {anim === "exploding" && (
         <div className="explosion-overlay">
-          {explosionParticles.map((p) => (
-             <div key={p.id} className="btc-particle" style={{
-                "--dx": p.dx,
-                "--dy": p.dy,
-             }}>₿</div>
-          ))}
+          <div className="particles-container">
+            {explosionParticles.map((p) => (
+               <div key={p.id} className="btc-particle" style={{
+                  "--dx": p.dx,
+                  "--dy": p.dy,
+               }}>₿</div>
+            ))}
+          </div>
           <div className="explosion-text">0 BTC</div>
         </div>
       )}
