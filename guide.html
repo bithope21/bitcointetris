@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Educational Guide — Bitcoin Tetris Party</title>
+<meta name="description" content="Bitcoin Tetris Party Guide. Learn the rules, the mathematics of 256-bit entropy, BIP-39 seed phrases, and why Bitcoin is cryptographically secure." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css" />
+<style>
+  body {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    line-height: 1.6;
+    font-family: "Nunito", sans-serif;
+  }
+  .header-back {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  .lang-toggle {
+    display: inline-flex;
+    background: white;
+    border: 3px solid var(--ink);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 0 var(--ink);
+  }
+  .lang-btn {
+    border: none;
+    background: transparent;
+    padding: 6px 16px;
+    font-family: "Baloo 2", sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .lang-btn.active {
+    background: var(--btc);
+    color: white;
+  }
+  h1 {
+    font-family: "Baloo 2", sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    margin-bottom: 24px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+  }
+  h2 {
+    font-family: "Baloo 2", sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    color: var(--ink2);
+  }
+  p, li {
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  ul, ol {
+    padding-left: 20px;
+    margin-bottom: 16px;
+  }
+  a {
+    color: var(--btc);
+    text-decoration: underline;
+    font-weight: 700;
+  }
+  .math-block {
+    background: #f7eed8;
+    border: 3px solid var(--ink);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 20px 0;
+    font-family: ui-monospace, monospace;
+    font-size: 15px;
+    box-shadow: 0 4px 0 var(--ink);
+  }
+  
+  /* Dual-language switching logic */
+  body.lang-en .th { display: none; }
+  body.lang-th .en { display: none; }
+</style>
+</head>
+<body class="lang-en">
+
+<div class="header-back">
+  <a href="/" class="btn btn-sm btn-sky" style="text-decoration: none;">← Return to Arena</a>
+  <div class="lang-toggle">
+    <button id="btn-en" class="lang-btn active" onclick="setLang('en')">English</button>
+    <button id="btn-th" class="lang-btn" onclick="setLang('th')">ไทย</button>
+  </div>
+</div>
+
+<div class="panel">
+  <!-- ENGLISH VERSION -->
+  <div class="lang en">
+    <h1>Educational & Gameplay Guide</h1>
+    <p>Welcome to the official learning guide for <strong>Bitcoin Tetris Party</strong>. This page explains both how to play the game and the fascinating mathematical principles of cryptography and probability that secure the Bitcoin network.</p>
+    
+    <h2>1. How to Play the Game</h2>
+    <p>In Bitcoin Tetris Party, you aren't just stacking ordinary blocks — you are stacking <strong>entropy</strong>!</p>
+    <ol>
+      <li><strong>Stack BIP-39 Words:</strong> Each falling Tetris shape carries a 4-letter prefix of a word from the BIP-39 dictionary. Your goal is to clear lines like in classic Tetris.</li>
+      <li><strong>Generate Seed Phrases:</strong> Clearing lines triggers "letters" to drop into your **Entropy Jar**. When the jar fills up, it generates a gameplay <strong>Scratch Ticket</strong> containing a simulated 12-word or 24-word seed phrase.</li>
+      <li><strong>Verify Zero:</strong> You can "scratch" the ticket to reveal a public address and hit "Verify Address" to check if that wallet contains any Bitcoin. The simulator compares it to a public target address containing millions of dollars. You'll find it always holds **0 BTC** — but why? Let's look at the math!</li>
+    </ol>
+
+    <h2>2. Understanding BIP-39 & Seed Phrases</h2>
+    <p>A Bitcoin wallet isn't stored in a physical file; it is derived from a massive random number called a **private key**. Because long binary numbers like <code>101100101...</code> are impossible for humans to remember, developers created **BIP-39** (Bitcoin Improvement Proposal 39).</p>
+    <p>BIP-39 maps those big numbers into a list of **2,048 human-friendly words** (like <em>apple</em>, <em>banana</em>, <em>crypto</em>).
+    When you set up a hardware wallet, you write down 12 or 24 words. These words are literally just a representation of a massive, unique number.</p>
+
+    <h2>3. The Astronomical Math of Entropy</h2>
+    <p>Why does your scratch ticket always show 0 BTC? It's not a bug. It's a demonstration of the security of 256-bit cryptography.</p>
+    <p>When you generate a 12-word seed phrase, the number of possible combinations is:</p>
+    <div class="math-block">
+      Total Combinations (12 Words) = 2,048^12<br/>
+      = 5,444,517,870,735,015,415,413,993,718,908,291,384,000,000<br/>
+      ≈ 3.4 x 10^38 possible wallets!
+    </div>
+    <p>For a 24-word seed phrase, the security scales to 256 bits:</p>
+    <div class="math-block">
+      Total Combinations (24 Words) = 2,048^24<br/>
+      ≈ 1.15 x 10^77 possible wallets!
+    </div>
+    
+    <h2>4. Visualizing the Impossibility</h2>
+    <p>To help you understand how huge <code>1.15 x 10^77</code> is:</p>
+    <ul>
+      <li>The total number of atoms in the entire observable universe is estimated to be around <code>10^80</code>.</li>
+      <li>If you ran a supercomputer that could guess **1 trillion wallets per second**, and let it run since the beginning of time (13.8 billion years ago), it would have guessed less than <code>0.000000000000000000000000000000000000001%</code> of the combinations.</li>
+    <li>Guessing a correct seed phrase with coins is infinitely harder than winning the lottery 10 times consecutively!</li>
+    </ul>
+
+    <h2>5. Security Warning</h2>
+    <p>Because the math is so powerful, the **only** way a hacker can steal someone's Bitcoin is if the owner gives away their seed phrase. **Always keep your real-world seed phrases completely offline (never on a phone, computer, or simulator).**</p>
+  </div>
+
+  <!-- THAI VERSION -->
+  <div class="lang th">
+    <h1>คู่มือการเล่นและเรียนรู้ทางคณิตศาสตร์</h1>
+    <p>ยินดีต้อนรับสู่คู่มือการเรียนรู้อย่างเป็นทางการสำหรับ <strong>Bitcoin Tetris Party</strong> หน้านี้จะอธิบายวิธีการเล่นเกมและหลักการคณิตศาสตร์ที่น่าทึ่งเกี่ยวกับระบบวิทยาการรหัสลับที่คอยปกป้องกระเป๋าเงินบิตคอยน์ของคนทั่วโลก</p>
+    
+    <h2>1. วิธีการเล่นเกม</h2>
+    <p>ในเกม Bitcoin Tetris Party คุณไม่ได้ต่อบล็อกธรรมดา แต่คุณกำลังต่อ **ค่าความสุ่มทางวิทยาการรหัสลับ (Entropy)**!</p>
+    <ol>
+      <li><strong>ต่อบล็อกคำศัพท์ BIP-39:</strong> บล็อกแต่ละตัวที่ตกลงมาจะมีตัวอักษรนำหน้าของคำศัพท์มาตรฐานในพจนานุกรม BIP-39 หน้าที่ของคุณคือการเคลียร์แถวตามกติกาคลาสสิกของ Tetris</li>
+      <li><strong>สร้างชุดคำกู้ชีพ (Seed Phrase):</strong> ทุกครั้งที่คุณเคลียร์แถวสำเร็จ ตัวอักษรจะหล่นลงไปสะสมใน **โถสุ่มพลังงาน (Entropy Jar)** เมื่อโถสุ่มเต็ม ระบบจะสร้าง **ตั๋วขูด (Scratch Ticket)** จำลองคำกู้ชีพ 12 หรือ 24 คำออกมา</li>
+      <li><strong>ตรวจสอบยอดเหรียญ:</strong> คุณสามารถ "ขูดตั๋ว" เพื่อดูเลขที่อยู่กระเป๋า (Public Address) และกดปุ่ม "Verify Address" เพื่อจำลองการตรวจสอบว่าในกระเป๋านั้นมีบิตคอยน์อยู่หรือไม่ ซึ่งตัวระบบจะเปรียบเทียบเลขกระเป๋าของคุณกับกระเป๋าเป้าหมายที่มีบิตคอยน์จริงมูลค่ามหาศาล คุณจะพบว่ายอดเป็น **0 BTC** เสมอ — แต่ทำไมล่ะ? มาดูคณิตศาสตร์กัน!</li>
+    </ol>
+
+    <h2>2. BIP-39 และ Seed Phrase คืออะไร?</h2>
+    <p>กระเป๋าเงินบิตคอยน์ของคุณไม่ได้ถูกเก็บอยู่ในไฟล์คอมพิวเตอร์ทั่วไป แต่สร้างขึ้นจากตัวเลขสุ่มขนาดมหึมาที่เรียกว่า **คีย์ส่วนตัว (Private Key)** เนื่องจากตัวเลขฐานสองที่ยาวมากๆ อย่าง <code>101100101...</code> นั้นจดจำได้ยากมาก นักพัฒนาจึงได้คิดค้นมาตรฐาน **BIP-39** ขึ้นมา</p>
+    <p>BIP-39 ทำหน้าที่จับคู่ตัวเลขสุ่มขนาดใหญ่เหล่านั้นกับ **พจนานุกรมคำศัพท์มาตรฐาน 2,048 คำ** (เช่น <em>apple</em>, <em>banana</em>, <em>crypto</em>)
+    เมื่อคุณตั้งค่ากระเป๋าฮาร์ดแวร์ (Hardware Wallet) ระบบจึงให้คุณจดคำศัพท์ 12 หรือ 24 คำลงบนกระดาษ คำกู้ชีพเหล่านี้แท้จริงแล้วก็คือตัวแทนของตัวเลขสุ่มขนาดใหญ่นั่นเอง</p>
+
+    <h2>3. คณิตศาสตร์ระดับจักรวาลของความน่าจะเป็น</h2>
+    <p>ทำไมตั๋วของคุณถึงขูดได้ 0 BTC เสมอ? นี่ไม่ใช่บั๊กของเกม แต่เป็นเครื่องพิสูจน์ระบบความปลอดภัยแบบ 256-บิต</p>
+    <p>เมื่อคุณสร้างกระเป๋าแบบ 12 คำ โอกาสและจำนวนความน่าจะเป็นของกระเป๋าที่เป็นไปได้คือ:</p>
+    <div class="math-block">
+      จำนวนกระเป๋าที่เป็นไปได้ทั้งหมด (12 คำ) = 2,048^12<br/>
+      = 5,444,517,870,735,015,415,413,993,718,908,291,384,000,000<br/>
+      ≈ 3.4 x 10^38 กระเป๋า!
+    </div>
+    <p>และสำหรับกระเป๋าแบบ 24 คำ ความปลอดภัยจะเพิ่มขึ้นถึงระดับ 256-บิต:</p>
+    <div class="math-block">
+      จำนวนกระเป๋าที่เป็นไปได้ทั้งหมด (24 คำ) = 2,048^24<br/>
+      ≈ 1.15 x 10^77 กระเป๋า!
+    </div>
+    
+    <h2>4. จินตนาการถึงความยากในการสุ่มเดา</h2>
+    <p>เพื่อให้เห็นภาพว่าตัวเลขสุ่ม <code>1.15 x 10^77</code> นั้นใหญ่ขนาดไหน:</p>
+    <ul>
+      <li>จำนวนอะตอมทั้งหมดในจักรวาลที่สังเกตได้มีประมาณ <code>10^80</code> อะตอม</li>
+      <li>หากมีซูเปอร์คอมพิวเตอร์ที่เดากระเป๋าได้ **1 ล้านล้านกระเป๋าต่อวินาที** และเริ่มเดาตั้งแต่เกิดบิ๊กแบง (13.8 พันล้านปีก่อน) จนถึงวันนี้ มันจะสุ่มเดาได้ไม่ถึง <code>0.000000000000000000000000000000000000001%</code> ของจำนวนกระเป๋าทั้งหมด</li>
+      <li>การสุ่มเดาคำกู้ชีพที่มีเงินอยู่จริงนั้น ยากกว่าการที่คุณถูกลอตเตอรี่รางวัลที่หนึ่งติดต่อกัน 10 งวดเสียอีก!</li>
+    </ul>
+
+    <h2>5. คำเตือนความปลอดภัยในชีวิตจริง</h2>
+    <p>เพราะระบบคณิตศาสตร์ของบิตคอยน์มีความแข็งแกร่งมหาศาล ทางเดียวที่แฮกเกอร์จะขโมยเหรียญของคุณได้คือการได้ตัวคำกู้ชีพ (Seed Phrase) ของคุณไป **โปรดเก็บรักษาคำกู้ชีพของคุณในชีวิตจริงไว้ในกระดาษแบบออฟไลน์เท่านั้น ห้ามบันทึกไว้ในโทรศัพท์ คอมพิวเตอร์ หรือหน้าเว็บจำลองใดๆ เด็ดขาด**</p>
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="lang en">© 2026 Bitcoin Tetris Party — An educational project by Bithope.</div>
+  <div class="lang th">© 2026 Bitcoin Tetris Party — โครงการเพื่อการศึกษาโดย Bithope</div>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('btn-' + lang).classList.add('active');
+    localStorage.setItem('btct_lang', lang);
+  }
+
+  // Load language from storage
+  const savedLang = localStorage.getItem('btct_lang') || 'en';
+  setLang(savedLang);
+</script>
+</body>
+</html>

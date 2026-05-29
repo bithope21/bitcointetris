@@ -3,6 +3,10 @@
   "outputDirectory": ".",
   "rewrites": [
     { "source": "/", "destination": "/bitcointetris.html" },
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/guide", "destination": "/guide.html" },
     { "source": "/manifest.json",        "destination": "/public/manifest.json" },
     { "source": "/icon-512.png",         "destination": "/public/icon-512.png" },
     { "source": "/icon-192.png",         "destination": "/public/icon-192.png" },

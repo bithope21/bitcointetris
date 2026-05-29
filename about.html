@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About Us — Bitcoin Tetris Party</title>
+<meta name="description" content="About Bitcoin Tetris Party. Learn about Bithope, our educational mission, and why we built this Bitcoin probability game." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css" />
+<style>
+  body {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    line-height: 1.6;
+    font-family: "Nunito", sans-serif;
+  }
+  .header-back {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  .lang-toggle {
+    display: inline-flex;
+    background: white;
+    border: 3px solid var(--ink);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 0 var(--ink);
+  }
+  .lang-btn {
+    border: none;
+    background: transparent;
+    padding: 6px 16px;
+    font-family: "Baloo 2", sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .lang-btn.active {
+    background: var(--btc);
+    color: white;
+  }
+  h1 {
+    font-family: "Baloo 2", sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    margin-bottom: 24px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+  }
+  h2 {
+    font-family: "Baloo 2", sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    color: var(--ink2);
+  }
+  p, li {
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  ul {
+    padding-left: 20px;
+    margin-bottom: 16px;
+  }
+  a {
+    color: var(--btc);
+    text-decoration: underline;
+    font-weight: 700;
+  }
+  
+  /* Dual-language switching logic */
+  body.lang-en .th { display: none; }
+  body.lang-th .en { display: none; }
+</style>
+</head>
+<body class="lang-en">
+
+<div class="header-back">
+  <a href="/" class="btn btn-sm btn-sky" style="text-decoration: none;">← Return to Arena</a>
+  <div class="lang-toggle">
+    <button id="btn-en" class="lang-btn active" onclick="setLang('en')">English</button>
+    <button id="btn-th" class="lang-btn" onclick="setLang('th')">ไทย</button>
+  </div>
+</div>
+
+<div class="panel">
+  <!-- ENGLISH VERSION -->
+  <div class="lang en">
+    <h1>About Bitcoin Tetris Party</h1>
+    <p><strong>Bitcoin Tetris Party</strong> is a web-based educational game designed to demystify complex cryptographic concepts and probability theories underlying Bitcoin security.</p>
+    
+    <h2>Our Mission</h2>
+    <p>The core mission of this project is to answer the classic question: <em>"Can someone randomly guess my Bitcoin seed phrase?"</em> by visualizing the astronomical scale of 256-bit entropy in a fun, tactile, and highly understandable Tetris-like arcade format.</p>
+    <p>By letting players manually stack BIP-39 words, form seed phrases, and test them locally in a fully private emulator, players experience firsthand why random guessing is mathematically futile.</p>
+    
+    <h2>About Bithope</h2>
+    <p><strong>Bithope</strong> is an educational platform and open-source workshop dedicated to providing accessible, engaging, and highly visual learning tools for the Bitcoin and cryptography community.</p>
+    <p>We believe that security education shouldn't be boring. Through gamification, we translate dense mathematical principles—such as sha256 hashing, BIP-39 dictionaries, and combinations—into playable arcade experiences.</p>
+
+    <h2>Why We Built This Game</h2>
+    <p>Many crypto newcomers struggle to grasp the scale of Bitcoin security. Standard articles offer dry equations like <code>2^256</code>, which is larger than the number of atoms in the observable universe. But humans are visual creatures. Stacking voxel tetrominoes with word labels and pulling a slot-machine arm to test simulated addresses provides a physical representation of how seed phrases work, improving retention and security awareness.</p>
+
+    <h2>Support and Contact</h2>
+    <p>This project is entirely open-source, non-commercial, and free for all. If you want to contribute, provide feedback, or check out our other learning tools, please visit our website at <a href="https://bithope.app" target="_blank" rel="noopener">bithope.app</a>.</p>
+  </div>
+
+  <!-- THAI VERSION -->
+  <div class="lang th">
+    <h1>เกี่ยวกับ Bitcoin Tetris Party</h1>
+    <p><strong>Bitcoin Tetris Party</strong> คือเกมการศึกษาในเบราว์เซอร์ที่สร้างขึ้นเพื่อลดความซับซ้อนของวิทยาการรหัสลับและความน่าจะเป็นทางคณิตศาสตร์ที่เป็นรากฐานระบบความปลอดภัยของระบบบิตคอยน์</p>
+    
+    <h2>ภารกิจหลักของเรา</h2>
+    <p>จุดมุ่งหมายหลักของโครงการนี้คือการตอบคำถามยอดฮิตที่ว่า: <em>"จะมีใครสามารถสุ่มเดาคำกู้ชีพ (Seed Phrase) บิตคอยน์ของฉันได้หรือไม่?"</em> โดยการนำเสนอแนวคิดเรื่อง ความน่าจะเป็นระดับมหาศาล (256-bit Entropy) ออกมาในรูปแบบที่เห็นภาพได้จริง เข้าใจง่าย ผ่านเกมแนวตัวต่อบล็อก (Tetris) ที่คุ้นเคย</p>
+    <p>ด้วยการให้ผู้เล่นต่อบล็อกคำศัพท์มาตรฐาน BIP-39 เพื่อสะสมเป็น Seed Phrase และจำลองการทดสอบหาเงินในเบราว์เซอร์ของตัวเอง ผู้เล่นจะเรียนรู้ด้วยตัวเองทันทีว่าทำไมในทางคณิตศาสตร์แล้ว การเดากระเป๋านั้นแทบเป็นไปไม่ได้เลย</p>
+    
+    <h2>เกี่ยวกับ Bithope</h2>
+    <p><strong>Bithope</strong> คือแพลตฟอร์มการศึกษาและห้องทดลองโอเพนซอร์ส (Open-source Workshop) ที่มุ่งมั่นนำเสนอเครื่องมือการเรียนรู้ที่เข้าใจง่าย สวยงาม และโต้ตอบได้จริงสำหรับชุมชนบิตคอยน์และวิทยาการรหัสลับ</p>
+    <p>เราเชื่อว่าการศึกษาเรื่องความปลอดภัยไม่จำเป็นต้องน่าเบื่อ ด้วยหลักการสร้างเกมเพื่อการเรียนรู้ (Gamification) เราจึงย่อยหลักการคณิตศาสตร์ที่เข้าใจยาก—เช่น อัลกอริทึม SHA-256, พจนานุกรมคำศัพท์ BIP-39 และการสุ่มแบบมีความปลอดภัย—ให้กลายเป็นเกมอาร์เคดที่สนุกสนาน</p>
+
+    <h2>ทำไมเราถึงสร้างเกมนี้ขึ้นมา</h2>
+    <p>ผู้เริ่มต้นหลายคนพบว่าความเข้าใจเรื่องขนาดของระดับความปลอดภัยบิตคอยน์นั้นเป็นเรื่องยาก บทความทั่วไปมักเสนอตัวเลขทฤษฎีแห้งๆ อย่าง <code>2^256</code> (ซึ่งมีค่ามากกว่าจำนวนอะตอมทั้งหมดในเอกภพที่สังเกตได้) แต่สมองมนุษย์เรียนรู้ได้ดีกว่าเมื่อได้เห็นภาพ การจำลองการต่อบล็อกคำศัพท์และกดคันโยกสล็อตแมชชีนเพื่อคำนวณสิทธิ์กระเป๋า จะช่วยเปลี่ยนคณิตศาสตร์ที่จับต้องไม่ได้ให้กลายเป็นการเรียนรู้เชิงกายภาพที่น่าจดจำและทรงพลัง</p>
+
+    <h2>การสนับสนุนและการติดต่อ</h2>
+    <p>โครงการนี้เป็นแบบโอเพนซอร์ส ปลอดโฆษณาเชิงพาณิชย์แอบแฝง และฟรีสำหรับทุกคน หากคุณต้องการมีส่วนร่วม เสนอแนะแนวคิด หรือดูผลงานอื่นๆ ของเรา สามารถเข้ามาเยี่ยมชมพอร์ทัลหลักได้ที่ <a href="https://bithope.app" target="_blank" rel="noopener">bithope.app</a></p>
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="lang en">© 2026 Bitcoin Tetris Party — An educational project by Bithope.</div>
+  <div class="lang th">© 2026 Bitcoin Tetris Party — โครงการเพื่อการศึกษาโดย Bithope</div>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('btn-' + lang).classList.add('active');
+    localStorage.setItem('btct_lang', lang);
+  }
+
+  // Load language from storage
+  const savedLang = localStorage.getItem('btct_lang') || 'en';
+  setLang(savedLang);
+</script>
+</body>
+</html>

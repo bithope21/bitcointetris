@@ -26,6 +26,27 @@
 <!-- Google AdSense -->
 <script>window.__ADS_CLIENT = "ca-pub-8163384047458426";</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8163384047458426" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Bitcoin Tetris Party",
+  "operatingSystem": "Web",
+  "applicationCategory": "EducationalGame",
+  "genre": "Puzzle",
+  "description": "An educational probability game mapping BIP-39 seed phrases in a Tetris-like voxel arcade format. Learn how 256-bit cryptographic entropy protects Bitcoin wallets.",
+  "creator": {
+    "@type": "Organization",
+    "name": "Bithope",
+    "url": "https://bithope.app"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
@@ -1189,7 +1210,41 @@ body {
 <!-- Green world background deco (rendered by JS below) -->
 <div class="world-scene" id="world-scene"></div>
 
-<main id="root"></main>
+<main id="root">
+  <div style="max-width: 800px; margin: 40px auto; padding: 24px; background: white; border: 3px solid #1a1a1a; border-radius: 18px; font-family: sans-serif; line-height: 1.6; color: #1a1a1a; box-shadow: 0 6px 0 #1a1a1a;">
+    <h1 style="font-size: 32px; font-weight: 900; margin-bottom: 16px;">Bitcoin Tetris Party — Stack Blocks, Learn Cryptographic Entropy</h1>
+    <p>Welcome to <strong>Bitcoin Tetris Party</strong>, a free educational game created by Bithope to help players visualize and understand the immense scale of 256-bit cryptography and probability securing the Bitcoin network.</p>
+    
+    <h2 style="font-size: 22px; font-weight: 800; margin-top: 24px; margin-bottom: 12px;">What is Bitcoin Tetris Party?</h2>
+    <p>Bitcoin Tetris Party merges the fun mechanics of classic Tetris-style block stacking with cryptography concepts. Instead of ordinary blocks, you are stacking 4-letter prefixes of standard BIP-39 mnemonic words. Clearing lines drops these words into an **Entropy Jar**, eventually generating a simulated Bitcoin 12-word or 24-word seed phrase (represented as a gameplay scratch card).</p>
+    
+    <h2 style="font-size: 22px; font-weight: 800; margin-top: 24px; margin-bottom: 12px;">The Mathematics of 256-bit Cryptographic Entropy</h2>
+    <p>A central question in cryptocurrency security is: <em>"Can someone randomly guess my Bitcoin seed phrase?"</em> This game answers that question mathematically. By letting you generate and verify simulated wallets locally, you can observe why guessing is virtually impossible.</p>
+    <ul>
+      <li><strong>12-Word Seed Phrase:</strong> The total possible combinations is 2,048^12 (approximately 3.4 x 10^38 possible wallets).</li>
+      <li><strong>24-Word Seed Phrase:</strong> The total possible combinations is 2,048^24 (approximately 1.15 x 10^77 possible wallets).</li>
+    </ul>
+    
+    <h2 style="font-size: 22px; font-weight: 800; margin-top: 24px; margin-bottom: 12px;">Visualizing the Security</h2>
+    <p>To put <code>1.15 x 10^77</code> combinations into perspective: the total number of atoms in the entire observable universe is estimated to be around <code>10^80</code>. Guessing an active wallet containing real Bitcoin is mathematically comparable to choosing one specific atom in our entire galaxy on the first try!</p>
+    
+    <h2 style="font-size: 22px; font-weight: 800; margin-top: 24px; margin-bottom: 12px;">Educational Integrity & Safety First</h2>
+    <p>Safety is our absolute priority. This website is a strictly serverless educational simulator:</p>
+    <ul>
+      <li>This website <strong>never</strong> asks you to enter real private keys or seed phrases.</li>
+      <li>All generated game mnemonics are created entirely locally inside your browser using secure cryptographic random values.</li>
+      <li>All ticket verifications are processed client-side and will always return 0 BTC to reinforce the educational lesson.</li>
+    </ul>
+
+    <h2 style="font-size: 22px; font-weight: 800; margin-top: 24px; margin-bottom: 12px;">Important Links</h2>
+    <div style="margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
+      <a href="/about" style="color: #f7931a; font-weight: bold; text-decoration: underline;">About Us</a>
+      <a href="/guide" style="color: #f7931a; font-weight: bold; text-decoration: underline;">Educational & Gameplay Guide</a>
+      <a href="/privacy" style="color: #f7931a; font-weight: bold; text-decoration: underline;">Privacy Policy</a>
+      <a href="/terms" style="color: #f7931a; font-weight: bold; text-decoration: underline;">Terms of Service</a>
+    </div>
+  </div>
+</main>
 
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
@@ -1597,15 +1652,11 @@ function PrivacyModal({ onClose }) {
 // Safety Badge
 // ============================================================
 function SafetyBadge() {
-  const [showPrivacy, setShowPrivacy] = React.useState(false);
   return (
-    <>
-      <div className="safety-badge">
-        🔒 Demo only · Never enter a real seed ·{" "}
-        <span style={{ textDecoration:"underline", cursor:"pointer", opacity:.8 }} onClick={() => setShowPrivacy(true)}>Privacy</span>
-      </div>
-      {showPrivacy && <PrivacyModal onClose={() => setShowPrivacy(false)} />}
-    </>
+    <div className="safety-badge">
+      🔒 Demo only · Never enter a real seed ·{" "}
+      <a href="/privacy" style={{ textDecoration:"underline", cursor:"pointer", opacity:.8, color:"#ffd700" }}>Privacy</a>
+    </div>
   );
 }
 
@@ -1712,11 +1763,25 @@ function MainMenu({ onPlay, onSettings }) {
       </div>
       <h1 className="menu-title">BITCOIN<br/>TETRIS PARTY</h1>
       <p className="menu-subtitle">Stack word blocks. Verify zero.</p>
-      <div className="menu-buttons">
-        <button className="btn btn-play" onClick={onPlay}>▶ Play</button>
-        <button className="btn btn-settings" onClick={onSettings}>⚙ Settings</button>
+      <div className="menu-buttons" style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 12 }}>
+          <button className="btn btn-play" onClick={onPlay}>▶ Play</button>
+          <button className="btn btn-settings" onClick={onSettings}>⚙ Settings</button>
+        </div>
+        <a href="/guide" className="btn btn-gold" style={{ textDecoration: "none", fontSize: "16px", padding: "10px 20px" }}>📖 Guide & Math (คู่มือการเล่น)</a>
       </div>
-      <AdSlot slotId="6184421547" format="horizontal" style={{ maxWidth:728, margin:"12px auto 0" }} />
+      
+      <footer style={{ marginTop: 24, display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", zIndex: 100 }}>
+        <a href="/about" style={{ color: "white", textDecoration: "none", fontWeight: 800, fontSize: 13 }}>About</a>
+        <span style={{ color: "rgba(255,255,255,0.4)" }}>•</span>
+        <a href="/guide" style={{ color: "white", textDecoration: "none", fontWeight: 800, fontSize: 13 }}>Guide</a>
+        <span style={{ color: "rgba(255,255,255,0.4)" }}>•</span>
+        <a href="/privacy" style={{ color: "white", textDecoration: "none", fontWeight: 800, fontSize: 13 }}>Privacy</a>
+        <span style={{ color: "rgba(255,255,255,0.4)" }}>•</span>
+        <a href="/terms" style={{ color: "white", textDecoration: "none", fontWeight: 800, fontSize: 13 }}>Terms</a>
+      </footer>
+
+      <AdSlot slotId="6184421547" format="horizontal" style={{ maxWidth:728, margin:"24px auto 0" }} />
       <SafetyBadge />
     </div>
   );

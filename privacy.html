@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy Policy — Bitcoin Tetris Party</title>
+<meta name="description" content="Privacy Policy for Bitcoin Tetris Party. Learn how we handle cookies, Google AdSense, and local storage data." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css" />
+<style>
+  body {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    line-height: 1.6;
+    font-family: "Nunito", sans-serif;
+  }
+  .header-back {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  .lang-toggle {
+    display: inline-flex;
+    background: white;
+    border: 3px solid var(--ink);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 0 var(--ink);
+  }
+  .lang-btn {
+    border: none;
+    background: transparent;
+    padding: 6px 16px;
+    font-family: "Baloo 2", sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .lang-btn.active {
+    background: var(--btc);
+    color: white;
+  }
+  h1 {
+    font-family: "Baloo 2", sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    margin-bottom: 24px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+  }
+  h2 {
+    font-family: "Baloo 2", sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    color: var(--ink2);
+  }
+  p, li {
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  ul {
+    padding-left: 20px;
+    margin-bottom: 16px;
+  }
+  a {
+    color: var(--btc);
+    text-decoration: underline;
+    font-weight: 700;
+  }
+  
+  /* Dual-language switching logic */
+  body.lang-en .th { display: none; }
+  body.lang-th .en { display: none; }
+</style>
+</head>
+<body class="lang-en">
+
+<div class="header-back">
+  <a href="/" class="btn btn-sm btn-sky" style="text-decoration: none;">← Return to Arena</a>
+  <div class="lang-toggle">
+    <button id="btn-en" class="lang-btn active" onclick="setLang('en')">English</button>
+    <button id="btn-th" class="lang-btn" onclick="setLang('th')">ไทย</button>
+  </div>
+</div>
+
+<div class="panel">
+  <!-- ENGLISH VERSION -->
+  <div class="lang en">
+    <h1>Privacy Policy</h1>
+    <p>Last updated: May 2026</p>
+    
+    <p>Welcome to <strong>Bitcoin Tetris Party</strong> (https://bitcointetris.vercel.app). We are committed to protecting your privacy. This page explains what data we collect, how we use third-party services, and how we ensure a safe, educational experience for all players.</p>
+    
+    <h2>1. Data We Collect</h2>
+    <p>We believe in absolute data privacy. This website is a serverless client-side application:</p>
+    <ul>
+      <li><strong>No Personal Information:</strong> We do not require accounts, registration, email addresses, or log-ins. We do not collect or store any of your personal data on any server.</li>
+      <li><strong>Local Storage:</strong> Your chosen player name, setting preferences (sound/haptics), and non-sensitive gameplay statistics (e.g., tickets generated, lines cleared) are stored locally in your browser's <code>localStorage</code>. This data never leaves your device.</li>
+    </ul>
+
+    <h2>2. Third-Party Advertising (Google AdSense)</h2>
+    <p>This website displays advertisements served by Google AdSense to support the project. Therefore, we comply with Google’s privacy requirements:</p>
+    <ul>
+      <li>Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this website or other websites.</li>
+      <li>Google's use of advertising cookies enables it and its partners to serve ads to you based on your visit to this site and/or other sites on the Internet.</li>
+      <li>You may opt out of personalized advertising by visiting <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google Ads Settings</a>.</li>
+    </ul>
+
+    <h2>3. Cookies</h2>
+    <p>Cookies are small text files placed on your device to analyze web traffic and customize your experience. Other than standard third-party advertising cookies used by Google AdSense, this website does not place proprietary tracking cookies on your device.</p>
+
+    <h2>4. Educational & Mnemonic Safety</h2>
+    <p><strong>Bitcoin Tetris Party</strong> is purely an educational game demonstrating cryptography and probability. It is absolutely secure:</p>
+    <ul>
+      <li>This game <strong>never</strong> asks for, handles, or saves real Bitcoin private keys, seed phrases, or mnemonics.</li>
+      <li>Any simulated 12-word or 24-word seed phrases generated during gameplay are created purely locally in your browser using secure cryptographic entropy (<code>crypto.getRandomValues</code>) and are utilized solely to demonstrate that the chance of guessing an active wallet is zero.</li>
+    </ul>
+
+    <h2>5. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. Any updates will be posted directly on this page with an updated revision date.</p>
+
+    <h2>6. Contact Us</h2>
+    <p>If you have any questions about this Privacy Policy, you can reach out via Bithope community platforms or by visiting our main project portal at <a href="https://bithope.app" target="_blank" rel="noopener">bithope.app</a>.</p>
+  </div>
+
+  <!-- THAI VERSION -->
+  <div class="lang th">
+    <h1>นโยบายความเป็นส่วนตัว (Privacy Policy)</h1>
+    <p>ปรับปรุงล่าสุด: พฤษภาคม 2026</p>
+    
+    <p>ยินดีต้อนรับสู่ <strong>Bitcoin Tetris Party</strong> (https://bitcointetris.vercel.app) เราให้ความสำคัญอย่างยิ่งต่อการปกป้องข้อมูลส่วนตัวของคุณ หน้านี้อธิบายเกี่ยวกับข้อมูลที่เราจัดเก็บ การใช้บริการจากผู้ให้บริการภายนอก และมาตรการเพื่อความปลอดภัยในการเรียนรู้ของผู้เล่นทุกคน</p>
+    
+    <h2>1. ข้อมูลที่เราจัดเก็บ</h2>
+    <p>เรายึดมั่นในนโยบายความเป็นส่วนตัวขั้นสูงสุด เว็บไซต์นี้เป็นแอปพลิเคชันที่ทำงานบนฝั่งเบราว์เซอร์ของผู้ใช้โดยสมบูรณ์ (Client-Side Application):</p>
+    <ul>
+      <li><strong>ไม่มีการเก็บข้อมูลส่วนตัว:</strong> เราไม่ต้องการบัญชีผู้ใช้ การลงทะเบียน อีเมล หรือการเข้าสู่ระบบใดๆ เราไม่มีการเก็บรวบรวมหรือส่งข้อมูลส่วนตัวของคุณไปยังเซิร์ฟเวอร์ใดๆ ทั้งสิ้น</li>
+      <li><strong>การจัดเก็บข้อมูลในเครื่อง (Local Storage):</strong> ชื่อผู้เล่นที่คุณเลือก ตั้งค่าเสียง/การสั่น และสถิติการเล่นเกมทั่วไป (เช่น จำนวนตั๋วที่สร้าง จำนวนแถวที่เคลียร์) จะถูกบันทึกไว้ในเครื่องของคุณผ่านระบบ <code>localStorage</code> ของเบราว์เซอร์เท่านั้น ข้อมูลเหล่านี้จะไม่ถูกส่งออกนอกอุปกรณ์ของคุณ</li>
+    </ul>
+
+    <h2>2. บริการโฆษณาจากภายนอก (Google AdSense)</h2>
+    <p>เว็บไซต์นี้มีการแสดงโฆษณาโดย Google AdSense เพื่อสนับสนุนโครงการ ดังนั้นเราจึงปฏิบัติตามนโยบายความปลอดภัยของ Google ดังนี้:</p>
+    <ul>
+      <li>ผู้ให้บริการภายนอกรวมถึง Google จะใช้คุกกี้ (Cookies) เพื่อแสดงโฆษณาตามประวัติการเยี่ยมชมเว็บไซต์นี้หรือเว็บไซต์อื่นๆ ของผู้ใช้</li>
+      <li>การใช้คุกกี้เพื่อการโฆษณาช่วยให้ Google และพันธมิตรสามารถแสดงโฆษณาแก่ผู้เล่นโดยอิงจากการเยี่ยมชมเว็บไซต์นี้ และ/หรือ เว็บไซต์อื่นๆ บนอินเทอร์เน็ต</li>
+      <li>คุณสามารถปิดการแสดงโฆษณาที่ปรับแต่งตามโปรไฟล์ของคุณได้โดยไปที่ <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google Ads Settings</a></li>
+    </ul>
+
+    <h2>3. คุกกี้ (Cookies)</h2>
+    <p>คุกกี้คือไฟล์ข้อความขนาดเล็กที่วางอยู่บนอุปกรณ์ของคุณเพื่อวิเคราะห์ทราฟฟิกเว็บ นอกเหนือจากคุกกี้โฆษณามาตรฐานของ Google AdSense แล้ว เว็บไซต์นี้ไม่มีการใช้งานคุกกี้เพื่อการติดตามข้อมูลส่วนตัวอื่นๆ</p>
+
+    <h2>4. ความปลอดภัยด้านข้อมูลและ Seed Phrase</h2>
+    <p><strong>Bitcoin Tetris Party</strong> เป็นเกมเพื่อการศึกษาด้านวิทยาการรหัสลับและความน่าจะเป็นเท่านั้น โดยมีความปลอดภัยสูงสุด:</p>
+    <ul>
+      <li>เกมนี้ <strong>ไม่เคย</strong> ร้องขอ จัดการ หรือจัดเก็บคีย์ส่วนตัว (Private Keys) หรือ Seed Phrase ของจริงของคุณ</li>
+      <li>ตั๋วคำศัพท์ 12 หรือ 24 คำที่ปรากฏในเกมถูกสร้างขึ้นแบบสุ่มในเครื่องของคุณผ่านระบบ <code>crypto.getRandomValues</code> เพื่อแสดงหลักการทางคณิตศาสตร์ว่าโอกาสที่จะสุ่มเดากระเป๋าที่มีเหรียญอยู่จริงนั้นเป็นศูนย์</li>
+    </ul>
+
+    <h2>5. การแก้ไขปรับปรุงนโยบาย</h2>
+    <p>เราอาจปรับปรุงนโยบายความเป็นส่วนตัวนี้เป็นครั้งคราว โดยข้อความที่ปรับปรุงจะแสดงอยู่บนหน้านี้พร้อมระบุวันที่ปรับปรุงล่าสุด</p>
+
+    <h2>6. ติดต่อเรา</h2>
+    <p>หากมีข้อสงสัยใดๆ เกี่ยวกับนโยบายความเป็นส่วนตัวนี้ สามารถติดต่อเราได้ผ่านช่องทางชุมชนของ Bithope หรือเยี่ยมชมพอร์ทัลหลักของเราได้ที่ <a href="https://bithope.app" target="_blank" rel="noopener">bithope.app</a></p>
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="lang en">© 2026 Bitcoin Tetris Party — An educational project by Bithope.</div>
+  <div class="lang th">© 2026 Bitcoin Tetris Party — โครงการเพื่อการศึกษาโดย Bithope</div>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('btn-' + lang).classList.add('active');
+    localStorage.setItem('btct_lang', lang);
+  }
+
+  // Load language from storage
+  const savedLang = localStorage.getItem('btct_lang') || 'en';
+  setLang(savedLang);
+</script>
+</body>
+</html>
